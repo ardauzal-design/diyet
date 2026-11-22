@@ -1,45 +1,16 @@
+```html
 <!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arda ile Fit Kal • Akıllı Diyet, Tartı & Su Otomasyonu</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Plus Jakarta Sans & Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #ecfdf5 0%, #eff6ff 48%, #fff7ed 100%);
-            color: #0f172a;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-        h1, h2, h3, .brand-font {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.86);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.95);
-            box-shadow: 0 12px 32px -10px rgba(15, 23, 42, 0.06), 0 4px 12px -2px rgba(16, 185, 129, 0.05);
-        }
-        .vibrant-gradient {
-           <!DOCTYPE html>
 <html lang="tr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Arda ile Fit Kal | Kişisel Diyet & Kalori Portalı</title>
+  <title>Arda ile Fit Kal | AI Kalori & Diyet Takip Portalı</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
     body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f0fdf4; color: #0f172a; }
-    .glass-card { background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.8); }
+    .glass-card { background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(14px); border: 1px solid rgba(255, 255, 255, 0.85); }
     .mobile-shell { max-width: 410px; margin: 16px auto; border: 10px solid #0f172a; border-radius: 36px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); overflow: hidden; background: #f8fafc; min-height: 820px; position: relative; }
     input, select { font-size: 16px !important; }
     @keyframes pulseSoft { 0%, 100% { opacity: 1; } 50% { opacity: 0.65; } }
@@ -48,11 +19,15 @@
 </head>
 <body class="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-100">
 
+  <!-- BİLDİRİM KUTUSU (ALERT YERİNE ÖZEL TOAST) -->
+  <div id="toastArea" class="fixed top-14 right-4 left-4 sm:left-auto sm:w-96 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
   <!-- ÜST GÖRÜNÜM SEÇİCİ BAR -->
-  <div class="bg-slate-900 text-white px-4 py-2.5 flex items-center justify-between text-xs sticky top-0 z-50">
+  <div class="bg-slate-900 text-white px-4 py-2.5 flex items-center justify-between text-xs sticky top-0 z-40">
     <div class="flex items-center gap-2 font-bold">
       <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
       <span>Arda ile Fit Kal</span>
+      <span id="cloudSyncBadge" class="hidden sm:inline-block px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 text-[10px]">Hafıza Aktif</span>
     </div>
     <div class="flex items-center gap-2 bg-slate-800 p-1 rounded-xl">
       <button type="button" id="btnDesktopView" onclick="setViewMode('desktop')" class="px-3 py-1 rounded-lg font-semibold bg-emerald-500 text-white transition">Masaüstü</button>
@@ -63,13 +38,21 @@
   <!-- ANA KAPSAYICI -->
   <div id="appWrapper" class="transition-all duration-300">
 
-    <!-- 1. GİRİŞ / KAYIT EKRANI -->
+    <!-- 1. GİRİŞ / KAYIT / ŞİFRE SIFIRLAMA EKRANI -->
     <div id="authScreen" class="min-h-[85vh] flex items-center justify-center p-4">
       <div class="glass-card w-full max-w-md rounded-3xl p-7 shadow-xl">
         <div class="text-center mb-6">
           <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-white text-3xl font-extrabold shadow-lg mb-3">A</div>
           <h1 class="text-2xl font-extrabold text-slate-900">Arda ile Fit Kal</h1>
-          <p class="text-sm text-slate-500 mt-1">Kişisel kalori, su ve tartı takip asistanın</p>
+          <p class="text-sm text-slate-500 mt-1">Yapay zeka destekli kişisel diyet ve kalori asistanın</p>
+        </div>
+
+        <!-- KAYITLI HESAPLAR HIZLI SEÇİM KUTUSU -->
+        <div id="savedAccountsContainer" class="hidden mb-5 p-3.5 rounded-2xl bg-emerald-50/90 border border-emerald-200">
+          <div class="text-[11px] font-extrabold text-emerald-800 uppercase tracking-wide mb-2 flex items-center justify-between">
+            <span><i class="fa-solid fa-user-check mr-1"></i>Kayıtlı Hesapların (Tek Tıkla Doldur)</span>
+          </div>
+          <div id="savedAccountsList" class="flex flex-wrap gap-1.5"></div>
         </div>
 
         <!-- SEKMELER -->
@@ -85,15 +68,42 @@
         <div id="loginBox" class="space-y-4">
           <div>
             <label class="block text-xs font-bold text-slate-600 mb-1">E-Posta Adresin</label>
-            <input type="email" id="loginEmail" placeholder="ornek@mail.com" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-emerald-500 focus:outline-none bg-white" />
+            <input type="email" id="loginEmail" autocomplete="email" placeholder="ornek@mail.com" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-emerald-500 focus:outline-none bg-white" />
           </div>
           <div>
-            <label class="block text-xs font-bold text-slate-600 mb-1">Şifren</label>
-            <input type="password" id="loginPassword" placeholder="••••••" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-emerald-500 focus:outline-none bg-white" />
+            <div class="flex items-center justify-between mb-1">
+              <label class="block text-xs font-bold text-slate-600">Şifren</label>
+              <button type="button" onclick="toggleResetPasswordBox(true)" class="text-[11px] font-bold text-emerald-700 hover:underline">Şifremi Unuttum / Sıfırla</button>
+            </div>
+            <div class="relative">
+              <input type="password" id="loginPassword" autocomplete="current-password" onkeypress="if(event.key==='Enter') handleLogin()" placeholder="••••••" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-emerald-500 focus:outline-none bg-white pr-11" />
+              <button type="button" onclick="togglePasswordVisibility('loginPassword', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs px-1">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+            </div>
           </div>
-          <button type="button" onclick="handleLogin()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-700 hover:to-teal-600 text-white font-bold shadow-md transition active:scale-[0.99]">
+          <button type="button" id="btnLoginSubmit" onclick="handleLogin()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-700 hover:to-teal-600 text-white font-bold shadow-md transition active:scale-[0.99]">
             Giriş Yap
           </button>
+        </div>
+
+        <!-- ŞİFRE SIFIRLAMA FORMU (VERİLERİ KAYBETMEDEN YENİ ŞİFRE BELİRLEME) -->
+        <div id="resetPasswordBox" class="hidden space-y-4">
+          <div class="p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
+            Kayıtlı e-posta adresini girerek mevcut verilerini koruyup yeni bir şifre belirleyebilirsin.
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Kayıtlı E-Posta Adresin</label>
+            <input type="email" id="resetEmail" placeholder="ornek@mail.com" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-emerald-500 focus:outline-none bg-white" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Yeni Şifren (En az 4 karakter)</label>
+            <input type="password" id="resetNewPassword" placeholder="••••••" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-emerald-500 focus:outline-none bg-white" />
+          </div>
+          <div class="flex gap-2">
+            <button type="button" onclick="toggleResetPasswordBox(false)" class="flex-1 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition">Geri Dön</button>
+            <button type="button" onclick="handlePasswordReset()" class="flex-[2] py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md transition">Şifreyi Güncelle ve Giriş Yap</button>
+          </div>
         </div>
 
         <!-- KAYIT OL FORMU -->
@@ -108,7 +118,12 @@
           </div>
           <div>
             <label class="block text-xs font-bold text-slate-600 mb-1">Şifre Oluştur (En az 4 karakter)</label>
-            <input type="password" id="regPassword" placeholder="••••••" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-emerald-500 focus:outline-none bg-white" />
+            <div class="relative">
+              <input type="password" id="regPassword" onkeypress="if(event.key==='Enter') handleRegister()" placeholder="••••••" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-emerald-500 focus:outline-none bg-white pr-11" />
+              <button type="button" onclick="togglePasswordVisibility('regPassword', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs px-1">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+            </div>
           </div>
           <button type="button" id="btnRegisterSubmit" onclick="handleRegister()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-teal-600 to-emerald-500 hover:from-teal-700 hover:to-emerald-600 text-white font-bold shadow-md transition active:scale-[0.99]">
             Hesap Oluştur ve Başla
@@ -119,10 +134,10 @@
 
     <!-- 2. DİYETE BAŞLANGIÇ KURULUM SİHİRBAZI -->
     <div id="setupScreen" class="hidden min-h-[85vh] flex items-center justify-center p-4">
-      <div class="glass-card w-full max-w-lg rounded-3xl p-7 shadow-xl">
-        <div class="inline-block px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold mb-2">Adım 1 / 1 • Sıfırdan Temiz Başlangıç</div>
+      <div class="glass-card w-full max-w-xl rounded-3xl p-7 shadow-xl">
+        <div class="inline-block px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold mb-2">Kişisel Profil & Yaşam Tarzı Analizi</div>
         <h2 class="text-2xl font-extrabold text-slate-900">Diyet Profilini Oluşturalım</h2>
-        <p class="text-sm text-slate-500 mt-1 mb-5">Sana özel kalori bütçeni ve haftalık tartı günlerini otomatik ayarlayalım.</p>
+        <p class="text-sm text-slate-500 mt-1 mb-5">Fiziksel bilgilerine ve günlük hareket düzeyine göre kalori bütçeni otomatik hesaplayalım.</p>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
@@ -152,11 +167,50 @@
             <label class="block text-xs font-bold text-slate-600 mb-1">Yaşın</label>
             <input type="number" id="setupAge" placeholder="Örn: 34" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white" />
           </div>
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-bold text-slate-600 mb-1">Günlük Aktivite & Yaşam Tarzın</label>
+            <select id="setupActivity" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white">
+              <option value="1.2">Masa Başı / Hareketsiz (Spor yok, oturarak çalışma)</option>
+              <option value="1.375">Hafif Hareketli (Haftada 1-3 gün yürüyüş / hafif egzersiz)</option>
+              <option value="1.55">Orta Hareketli (Haftada 3-5 gün spor veya ayakta aktif iş)</option>
+              <option value="1.725">Çok Hareketli (Haftada 6-7 gün yoğun antrenman / fiziksel iş)</option>
+            </select>
+          </div>
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-bold text-slate-600 mb-1">Kilo Verme Temposu</label>
+            <select id="setupPace" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white">
+              <option value="500">Dengeli ve Kalıcı (Haftada ~0.5 - 0.7 kg kayıp • 500 kcal açık)</option>
+              <option value="700">Hızlı Başlangıç (Haftada ~0.7 - 1.0 kg kayıp • 700 kcal açık)</option>
+            </select>
+          </div>
         </div>
 
         <button type="button" onclick="saveInitialSetup()" class="w-full mt-6 py-3.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-bold shadow-lg hover:opacity-95 transition">
           Planımı Oluştur ve Panele Geç
         </button>
+
+        <!-- HESABI VE TÜM KAYITLARI KALICI SİLME ALANI -->
+        <div id="deleteAccountSection" class="hidden mt-6 pt-5 border-t border-rose-100">
+          <div class="p-4 rounded-2xl bg-rose-50/80 border border-rose-200">
+            <div class="flex items-center justify-between gap-2">
+              <div>
+                <h4 class="text-xs font-extrabold text-rose-800 uppercase">Tehlikeli Bölge • Kalıcı Silme</h4>
+                <p class="text-[11px] text-rose-600 mt-0.5">Hesabını, profil ayarlarını, tüm öğün, su ve tartı geçmişini cihaz ve bulut hafızasından kalıcı olarak siler.</p>
+              </div>
+              <button type="button" id="btnDeleteAccountStep1" onclick="requestAccountDelete()" class="shrink-0 px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-sm transition">
+                Hesabı ve Tüm Kayıtları Sil
+              </button>
+            </div>
+            <!-- İki Aşamalı Onay Kutusu -->
+            <div id="deleteAccountConfirmBox" class="hidden mt-3 pt-3 border-t border-rose-200 flex flex-wrap items-center justify-between gap-2">
+              <span class="text-xs font-bold text-rose-900">Emin misin? Bu işlem geri alınamaz!</span>
+              <div class="flex gap-2">
+                <button type="button" onclick="cancelAccountDelete()" class="px-3 py-1.5 rounded-lg bg-white text-slate-700 font-bold text-xs border border-slate-200">Vazgeç</button>
+                <button type="button" onclick="confirmAccountDelete()" class="px-3 py-1.5 rounded-lg bg-rose-700 hover:bg-rose-800 text-white font-extrabold text-xs">Evet, Kalıcı Olarak Sil</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -166,8 +220,11 @@
       <!-- ÜST KULLANICI BAŞLIĞI -->
       <div class="glass-card rounded-3xl p-5 mb-5 flex flex-wrap items-center justify-between gap-4 shadow-sm">
         <div>
-          <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider" id="dashDateLabel">Bugün</span>
-          <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900">Merhaba, <span id="dashUserName">Kullanıcı</span> 👋</h1>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider" id="dashDateLabel">Bugün</span>
+            <span class="px-2 py-0.5 rounded-md bg-teal-50 text-teal-700 text-[10px] font-bold" id="dashActivityBadge">Masa Başı</span>
+          </div>
+          <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-0.5">Merhaba, <span id="dashUserName">Kullanıcı</span> 👋</h1>
           <p class="text-xs text-slate-500" id="dashUserEmail">mail@adres.com</p>
         </div>
         <div class="flex items-center gap-2">
@@ -223,7 +280,10 @@
         <div class="glass-card rounded-3xl p-5 shadow-sm">
           <div class="flex justify-between items-center mb-2">
             <span class="text-xs font-bold text-slate-500">SU & E-POSTA TAKİBİ</span>
-            <span class="px-2.5 py-0.5 rounded-full bg-cyan-100 text-cyan-700 text-xs font-bold" id="waterTargetLabel">Hedef: 3.0 L</span>
+            <div class="flex items-center gap-1.5">
+              <span class="px-2.5 py-0.5 rounded-full bg-cyan-100 text-cyan-700 text-xs font-bold" id="waterTargetLabel">Hedef: 3.0 L</span>
+              <button type="button" onclick="resetWaterLog()" title="Su kaydını sıfırla" class="px-2 py-0.5 rounded-full bg-rose-50 hover:bg-rose-100 text-rose-600 text-[10px] font-bold transition">Sıfırla</button>
+            </div>
           </div>
           <div class="text-3xl font-extrabold text-cyan-600"><span id="waterConsumed">0.00</span> <span class="text-sm font-semibold text-slate-400">Litre</span></div>
           <div class="flex gap-2 mt-3">
@@ -240,47 +300,87 @@
       <!-- ANA İÇERİK IZGARASI -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
         
-        <!-- SOL 2 SÜTUN: ÖĞÜN EKLEME VE GÜNLÜK LİSTE -->
+        <!-- SOL 2 SÜTUN: OTOMATİK KALORİ BULUCU & GÜNLÜK LİSTE -->
         <div id="secMeals" class="lg:col-span-2 space-y-5">
-          <div class="glass-card rounded-3xl p-5 shadow-sm">
-            <h3 class="text-base font-extrabold text-slate-900 mb-3">Öğün veya İçecek Ekle</h3>
+          <div class="glass-card rounded-3xl p-5 shadow-sm border border-emerald-200/70">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <div>
+                <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
+                  <i class="fa-solid fa-wand-magic-sparkles text-emerald-600"></i>
+                  <span>Akıllı Öğün & Otomatik Kalori Bulucu</span>
+                </h3>
+                <p class="text-xs text-slate-500">Kalori girme! Sadece ne yediğini ve porsiyonunu yaz, sistem kalorisini ve makrolarını otomatik bulsun.</p>
+              </div>
+              <span class="px-2.5 py-1 rounded-xl bg-emerald-100 text-emerald-800 text-[11px] font-extrabold">Otomatik Hesaplama</span>
+            </div>
+
             <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5">
-              <select id="mealTypeInput" class="sm:col-span-3 px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-sm font-semibold">
+              <select id="mealTypeInput" class="sm:col-span-4 px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-sm font-semibold">
                 <option value="Kahvaltı">Kahvaltı</option>
                 <option value="Öğle Yemeği">Öğle Yemeği</option>
                 <option value="Ara Öğün">Ara Öğün</option>
                 <option value="Akşam Yemeği">Akşam Yemeği</option>
               </select>
-              <input type="text" id="mealNameInput" placeholder="Ne yedin? (Örn: Izgara tavuk + salata)" class="sm:col-span-6 px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-sm" />
-              <input type="number" id="mealCalInput" placeholder="Kalori (kcal)" class="sm:col-span-3 px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-sm" />
+
+              <select id="mealPortionInput" class="sm:col-span-8 px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-sm font-semibold">
+                <option value="0.5|0.5 Porsiyon (Yarım)">0.5 Porsiyon (Yarım)</option>
+                <option value="0.75|0.75 Porsiyon">0.75 Porsiyon</option>
+                <option value="1|1 Porsiyon (Tam)" selected>1 Porsiyon (Tam)</option>
+                <option value="1.5|1.5 Porsiyon">1.5 Porsiyon</option>
+                <option value="2|2 Porsiyon (Duble)">2 Porsiyon (Duble)</option>
+                <option value="1|100 gr / 1 Kase">100 gr / 1 Kase</option>
+                <option value="1.5|150 gr">150 gr</option>
+                <option value="2|200 gr">200 gr</option>
+              </select>
+
+              <div class="sm:col-span-12">
+                <input type="text" id="mealNameInput" onkeypress="if(event.key==='Enter') autoCalculateAndAddMeal()" placeholder="Ne yedin? (Örn: Izgara tavuk şiş ve çoban salata, 1 kase mercimek çorbası...)" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-emerald-500 focus:outline-none bg-white text-sm" />
+              </div>
             </div>
 
-            <!-- HIZLI HAZIR SEÇENEKLER -->
-            <div class="flex flex-wrap gap-1.5 mt-3">
-              <button type="button" onclick="quickFillMeal('Kahvaltı', 'Muzsuz Yulaf Lapası (4 yk yulaf + süt + 2 ceviz)', 320)" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-emerald-50 text-slate-700 text-xs font-semibold">+ Muzsuz Yulaf (320 kcal)</button>
-              <button type="button" onclick="quickFillMeal('Öğle Yemeği', 'Izgara Tavuk + Salata + Ayran', 520)" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-emerald-50 text-slate-700 text-xs font-semibold">+ Izgara Tavuk Menü (520 kcal)</button>
-              <button type="button" onclick="quickFillMeal('Ara Öğün', 'Portakal Çiçekli Beyaz Çay (Şekersiz)', 0)" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-emerald-50 text-slate-700 text-xs font-semibold">+ Beyaz Çay (0 kcal)</button>
-              <button type="button" onclick="quickFillMeal('Akşam Yemeği', 'Fırın Somon / Tavuk + Yoğurt + Salata', 480)" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-emerald-50 text-slate-700 text-xs font-semibold">+ Hafif Akşam Tabağı (480 kcal)</button>
+            <!-- HIZLI TEK TIK SEÇENEKLER -->
+            <div class="mt-3">
+              <div class="text-[11px] font-bold text-slate-400 mb-1.5">Hızlı Ekle (Seçili porsiyonla otomatik hesaplanır):</div>
+              <div class="flex flex-wrap gap-1.5">
+                <button type="button" onclick="quickAutoMeal('Kahvaltı', 'Muzsuz Yulaf Lapası (4 yk yulaf + süt + 2 ceviz)', 320, 14, 38, 12)" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-emerald-50 text-slate-700 text-xs font-semibold">+ Muzsuz Yulaf</button>
+                <button type="button" onclick="quickAutoMeal('Öğle Yemeği', 'Izgara Tavuk Şiş + Salata + Ayran', 520, 46, 18, 24)" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-emerald-50 text-slate-700 text-xs font-semibold">+ Izgara Tavuk Menü</button>
+                <button type="button" onclick="quickAutoMeal('Ara Öğün', 'Portakal Çiçekli Beyaz Çay (Şekersiz)', 0, 0, 0, 0)" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-emerald-50 text-slate-700 text-xs font-semibold">+ Beyaz Çay (0 kcal)</button>
+                <button type="button" onclick="quickAutoMeal('Akşam Yemeği', 'Fırın Somon + Yoğurt + Yeşil Salata', 480, 38, 12, 28)" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-emerald-50 text-slate-700 text-xs font-semibold">+ Hafif Akşam Tabağı</button>
+              </div>
             </div>
 
-            <button type="button" onclick="addMealEntry()" class="w-full mt-4 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm transition">
-              Günlüğe Kaydet
+            <button type="button" id="btnAutoCalcMeal" onclick="autoCalculateAndAddMeal()" class="w-full mt-4 py-3.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-700 hover:to-teal-600 text-white font-extrabold text-sm shadow-md transition flex items-center justify-center gap-2">
+              <i class="fa-solid fa-sparkles"></i>
+              <span id="btnAutoCalcLabel">Kalorisini Otomatik Bul ve Günlüğe Ekle</span>
             </button>
+
+            <!-- AI BESİN ANALİZ SONUCU KARTI -->
+            <div id="aiNutritionFeedback" class="hidden mt-3.5 p-3.5 rounded-2xl bg-emerald-50/90 border border-emerald-200 text-xs text-emerald-950"></div>
           </div>
 
           <!-- BUGÜNKÜ ÖĞÜNLER LİSTESİ -->
           <div class="glass-card rounded-3xl p-5 shadow-sm">
-            <div class="flex items-center justify-between mb-3">
-              <h3 class="text-base font-extrabold text-slate-900">Bugünkü Beslenme Kayıtların</h3>
-              <span class="text-xs font-bold text-slate-400" id="mealCountLabel">0 kayıt</span>
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <div class="flex items-center gap-2">
+                <h3 class="text-base font-extrabold text-slate-900">Bugünkü Beslenme Kayıtların</h3>
+                <span class="text-xs font-bold text-slate-400" id="mealCountLabel">0 kayıt</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="clearAllMeals()" class="px-2.5 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 text-[11px] font-bold transition">
+                  <i class="fa-solid fa-trash-can mr-1"></i>Öğünleri Temizle
+                </button>
+                <button type="button" onclick="resetFullDay()" class="px-2.5 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 text-[11px] font-bold transition">
+                  <i class="fa-solid fa-rotate-left mr-1"></i>Günü Sıfırla
+                </button>
+              </div>
             </div>
             <div id="mealListContainer" class="space-y-2.5">
-              <div class="text-center py-8 text-sm text-slate-400">Henüz öğün kaydı girilmedi. Yukarıdan ilk öğününü ekleyebilirsin.</div>
+              <div class="text-center py-8 text-sm text-slate-400">Henüz öğün kaydı girilmedi. Yukarıdan yediğini yaz ve otomatik hesapla!</div>
             </div>
           </div>
         </div>
 
-        <!-- SAĞ SÜTUN: OTOMATİK TARTI GÜNLERİ VE E-POSTA LOGU -->
+        <!-- SAĞ SÜTUN: OTOMATİK TARTI GÜNLERİ, GEÇMİŞ VE E-POSTA LOGU -->
         <div id="secWeighIn" class="space-y-5">
           <!-- TARTI TAKVİMİ -->
           <div class="glass-card rounded-3xl p-5 shadow-sm">
@@ -296,50 +396,297 @@
               <button type="button" onclick="updateCurrentWeight()" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs">Güncelle</button>
             </div>
 
-            <div id="weighInScheduleList" class="space-y-2 max-h-60 overflow-y-auto pr-1"></div>
+            <div id="weighInScheduleList" class="space-y-2 max-h-52 overflow-y-auto pr-1"></div>
+
+            <!-- KİLO ÖLÇÜM GEÇMİŞİ (SİLME DESTEKLİ) -->
+            <div class="mt-4 pt-3 border-t border-slate-100">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-extrabold text-slate-700">Tartı Geçmişin</span>
+                <button type="button" onclick="clearWeightHistory()" class="text-[11px] font-bold text-rose-500 hover:text-rose-700">Geçmişi Sil</button>
+              </div>
+              <div id="weightHistoryList" class="space-y-1.5 max-h-36 overflow-y-auto text-xs"></div>
+            </div>
           </div>
 
           <!-- OTOMATİK E-POSTA BİLDİRİM KUTUSU -->
           <div class="glass-card rounded-3xl p-5 shadow-sm">
             <div class="flex items-center justify-between mb-2">
-              <h3 class="text-sm font-extrabold text-slate-900">Otomatik E-Posta Bildirimleri</h3>
-              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse-soft"></span>
+              <div class="flex items-center gap-2">
+                <h3 class="text-sm font-extrabold text-slate-900">Otomatik E-Posta Bildirimleri</h3>
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse-soft"></span>
+              </div>
+              <button type="button" onclick="clearEmailLogs()" class="text-[11px] font-bold text-rose-500 hover:text-rose-700">Tümünü Sil</button>
             </div>
             <p class="text-[11px] text-slate-500 mb-3">2 saat boyunca su girişi yapılmadığında <strong id="mailTargetDisp">mail</strong> adresine otomatik hatırlatma gönderilir.</p>
             <div id="emailLogContainer" class="space-y-2 max-h-44 overflow-y-auto text-xs">
               <div class="p-2.5 rounded-xl bg-slate-50 text-slate-400">Su takibi aktif. Gecikme olursa bildirim burada ve mail kutunda görünür.</div>
             </div>
           </div>
+
+          <!-- HAFIZA & YEDEKLEME DURUM KARTI -->
+          <div class="glass-card rounded-3xl p-4 shadow-sm border border-emerald-100">
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-xs font-extrabold text-emerald-800 flex items-center gap-1.5">
+                <i class="fa-solid fa-shield-check text-emerald-600"></i>
+                <span>Kalıcı Hesap Hafızası</span>
+              </span>
+              <span id="lastSavedBadge" class="text-[10px] font-bold text-slate-400">Korunuyor</span>
+            </div>
+            <p class="text-[11px] text-slate-500 mb-2.5">Hesabın, şifren ve tüm günlük kayıtların bulut ve yerel hafızada saklanır; çıkış yaptığında silinmez.</p>
+            <div class="flex gap-2">
+              <button type="button" onclick="exportUserBackup()" class="flex-1 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-[11px] transition">Yedeği İndir (.json)</button>
+              <label class="flex-1 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] text-center cursor-pointer transition">
+                Yedek Yükle
+                <input type="file" accept=".json" onchange="importUserBackup(event)" class="hidden" />
+              </label>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- MOBİL ALT GEZİNTİ ÇUBUĞU -->
-      <div id="mobileBottomNav" class="hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-4 py-2 flex justify-around items-center z-40">
-        <button type="button" onclick="scrollToSec('secSummary')" class="flex flex-col items-center text-emerald-600 font-bold text-[11px]"><span>📊</span><span>Özet</span></button>
-        <button type="button" onclick="scrollToSec('secMeals')" class="flex flex-col items-center text-slate-600 font-bold text-[11px]"><span>🥗</span><span>Öğün Ekle</span></button>
-        <button type="button" onclick="addWater(0.25)" class="flex flex-col items-center text-cyan-600 font-bold text-[11px]"><span>💧</span><span>+Su İçtim</span></button>
-        <button type="button" onclick="scrollToSec('secWeighIn')" class="flex flex-col items-center text-slate-600 font-bold text-[11px]"><span>⚖️</span><span>Tartı</span></button>
+      <div id="mobileBottomNav" class="hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-3 py-2 flex justify-around items-center z-40">
+        <button type="button" onclick="scrollToSec('secSummary')" class="flex flex-col items-center text-emerald-600 font-bold text-[10px]"><span>📊</span><span>Özet</span></button>
+        <button type="button" onclick="scrollToSec('secMeals')" class="flex flex-col items-center text-slate-600 font-bold text-[10px]"><span>🥗</span><span>Öğün Bul</span></button>
+        <button type="button" onclick="addWater(0.25)" class="flex flex-col items-center text-cyan-600 font-bold text-[10px]"><span>💧</span><span>+Su İçtim</span></button>
+        <button type="button" onclick="scrollToSec('secWeighIn')" class="flex flex-col items-center text-slate-600 font-bold text-[10px]"><span>⚖️</span><span>Tartı</span></button>
       </div>
     </div>
   </div>
 
-  <script>
-    const DB_USERS_KEY = 'arda_fit_users_v3';
-    const DB_SESSION_KEY = 'arda_fit_session_v3';
+  <!-- KALICI HAFIZA (FIRESTORE + YEREL DEPO SENKRONİZASYONU) & GEMİNİ METİN API -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc, deleteDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    const apiKey = ""; // Çalışma zamanında otomatik sağlanır
+
+    // Kalıcı Depo Anahtarları (Çıkış yapıldığında ASLA silinmez, sadece aktif oturum anahtarı temizlenir)
+    const DB_USERS_KEY = 'arda_fit_users_db_permanent';
+    const DB_USERS_BACKUP_KEY = 'arda_fit_users_db_backup';
+    const DB_SESSION_KEY = 'arda_fit_active_session';
+
     let currentUser = null;
     let waterCheckInterval = null;
+    let db = null;
+    let authUser = null;
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'arda-ile-fit-kal';
 
-    function getUsers() {
+    const ACTIVITY_LABELS = {
+      '1.2': 'Masa Başı / Hareketsiz',
+      '1.375': 'Hafif Hareketli',
+      '1.55': 'Orta Hareketli',
+      '1.725': 'Çok Hareketli'
+    };
+
+    // E-posta adresini Firestore doküman ID'si ve yerel anahtar için güvenli hale getir
+    function normalizeEmail(email) {
+      return String(email || '').trim().toLowerCase();
+    }
+
+    function emailToDocId(email) {
+      return normalizeEmail(email).replace(/[^a-z0-9._-]/g, '_');
+    }
+
+    // Firebase Bulut Veritabanı Başlatma
+    async function initCloudStorage() {
       try {
-        return JSON.parse(localStorage.getItem(DB_USERS_KEY)) || {};
+        if (typeof __firebase_config === 'undefined') return;
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        db = getFirestore(app);
+
+        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+          const cred = await signInWithCustomToken(auth, __initial_auth_token);
+          authUser = cred.user;
+        } else {
+          const cred = await signInAnonymously(auth);
+          authUser = cred.user;
+        }
+
+        const badge = document.getElementById('cloudSyncBadge');
+        if (badge) badge.textContent = 'Bulut + Yerel Hafıza';
+
+        // Buluttaki kayıtlı hesapları yerel hafızayla eşitle
+        await syncAllCloudUsersToLocal();
+        renderSavedAccountsBar();
+      } catch (e) {
+        // Bulut erişilemezse yerel kalıcı hafıza kesintisiz devam eder
+      }
+    }
+
+    async function syncAllCloudUsersToLocal() {
+      if (!db || !authUser) return;
+      try {
+        const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'portal_accounts');
+        const snap = await getDocs(colRef);
+        const users = getLocalUsers();
+        let updated = false;
+        snap.forEach((docSnap) => {
+          const data = docSnap.data();
+          if (data && data.email) {
+            const norm = normalizeEmail(data.email);
+            users[norm] = { ...users[norm], ...data, email: norm };
+            updated = true;
+          }
+        });
+        if (updated) saveLocalUsers(users);
+      } catch (e) {}
+    }
+
+    async function saveUserToCloud(userObj) {
+      if (!db || !authUser || !userObj || !userObj.email) return;
+      try {
+        const docId = emailToDocId(userObj.email);
+        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'portal_accounts', docId);
+        await setDoc(docRef, JSON.parse(JSON.stringify(userObj)));
+      } catch (e) {}
+    }
+
+    async function fetchUserFromCloud(email) {
+      if (!db || !authUser) return null;
+      try {
+        const docId = emailToDocId(email);
+        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'portal_accounts', docId);
+        const snap = await getDoc(docRef);
+        if (snap.exists()) {
+          return snap.data();
+        }
+      } catch (e) {}
+      return null;
+    }
+
+    async function deleteUserFromCloud(email) {
+      if (!db || !authUser) return;
+      try {
+        const docId = emailToDocId(email);
+        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'portal_accounts', docId);
+        await deleteDoc(docRef);
+      } catch (e) {}
+    }
+
+    // Özel Toast Bildirim Sistemi
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toastArea');
+      if (!container) return;
+      const el = document.createElement('div');
+      const colors = type === 'error'
+        ? 'bg-rose-600 text-white'
+        : type === 'info'
+        ? 'bg-slate-900 text-emerald-300 border border-emerald-500/40'
+        : 'bg-emerald-600 text-white';
+      el.className = `pointer-events-auto px-4 py-3 rounded-2xl shadow-xl text-xs font-bold flex items-center justify-between gap-3 transition-all duration-300 ${colors}`;
+      el.innerHTML = `<span>${message}</span><button type="button" onclick="this.parentElement.remove()" class="opacity-75 hover:opacity-100">✕</button>`;
+      container.appendChild(el);
+      setTimeout(() => {
+        if (el.parentElement) el.remove();
+      }, 4200);
+    }
+
+    // Eski sürümlerdeki verileri de otomatik içeri aktararak hiçbir hesabın kaybolmamasını sağlar
+    function migrateLegacyUsersIfNeeded() {
+      const legacyKeys = ['arda_fit_users_v6', 'arda_fit_users_backup_v6', 'arda_fit_users_v5', 'arda_fit_users_v4', 'arda_fit_users_v3'];
+      const currentMap = getLocalUsers();
+      let changed = false;
+      for (const k of legacyKeys) {
+        try {
+          const raw = localStorage.getItem(k);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (parsed && typeof parsed === 'object') {
+              for (const [key, u] of Object.entries(parsed)) {
+                const normEmail = normalizeEmail(u.email || key);
+                if (normEmail && !currentMap[normEmail]) {
+                  currentMap[normEmail] = { ...u, email: normEmail };
+                  changed = true;
+                }
+              }
+            }
+          }
+        } catch (e) {}
+      }
+      if (changed) saveLocalUsers(currentMap);
+    }
+
+    function getLocalUsers() {
+      try {
+        const primary = localStorage.getItem(DB_USERS_KEY);
+        if (primary) {
+          const parsed = JSON.parse(primary);
+          if (parsed && typeof parsed === 'object') return parsed;
+        }
+        const backup = localStorage.getItem(DB_USERS_BACKUP_KEY);
+        if (backup) {
+          const parsedBackup = JSON.parse(backup);
+          if (parsedBackup && typeof parsedBackup === 'object') {
+            localStorage.setItem(DB_USERS_KEY, backup);
+            return parsedBackup;
+          }
+        }
+        return {};
       } catch (e) {
         return {};
       }
     }
 
-    function saveUsers(users) {
-      localStorage.setItem(DB_USERS_KEY, JSON.stringify(users));
+    function saveLocalUsers(users) {
+      try {
+        const serialized = JSON.stringify(users);
+        localStorage.setItem(DB_USERS_KEY, serialized);
+        localStorage.setItem(DB_USERS_BACKUP_KEY, serialized);
+        try { sessionStorage.setItem(DB_USERS_KEY, serialized); } catch (e) {}
+        const badge = document.getElementById('lastSavedBadge');
+        if (badge) {
+          badge.textContent = 'Kaydedildi: ' + new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+        }
+      } catch (e) {
+        showToast('Tarayıcı hafızasına yazılırken hata oluştu.', 'error');
+      }
     }
+
+    function renderSavedAccountsBar() {
+      const users = getLocalUsers();
+      const emails = Object.keys(users);
+      const container = document.getElementById('savedAccountsContainer');
+      const listEl = document.getElementById('savedAccountsList');
+      if (!container || !listEl) return;
+
+      if (emails.length === 0) {
+        container.classList.add('hidden');
+        return;
+      }
+
+      container.classList.remove('hidden');
+      listEl.innerHTML = emails.map(em => {
+        const u = users[em];
+        return `
+          <button type="button" onclick="quickFillSavedAccount('${em}')" class="px-3 py-1.5 rounded-xl bg-white hover:bg-emerald-600 hover:text-white text-emerald-900 border border-emerald-200 text-xs font-bold shadow-sm transition flex items-center gap-1.5">
+            <span>👤 ${u.name || em}</span>
+            <span class="opacity-70 text-[10px]">(${em})</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    window.quickFillSavedAccount = function(email) {
+      const users = getLocalUsers();
+      const u = users[normalizeEmail(email)];
+      if (!u) return;
+      switchAuthTab('login');
+      document.getElementById('loginEmail').value = u.email;
+      document.getElementById('loginPassword').value = u.password || '';
+      showToast(`${u.name} hesabı dolduruldu, Giriş Yap'a basabilirsin.`, 'info');
+    };
+
+    window.togglePasswordVisibility = function(inputId, btn) {
+      const inp = document.getElementById(inputId);
+      if (!inp) return;
+      const isPass = inp.type === 'password';
+      inp.type = isPass ? 'text' : 'password';
+      btn.innerHTML = isPass ? '<i class="fa-solid fa-eye-slash"></i>' : '<i class="fa-solid fa-eye"></i>';
+    };
 
     function showAuthAlert(msg, isError = true) {
       const box = document.getElementById('authAlert');
@@ -348,8 +695,9 @@
       box.classList.remove('hidden');
     }
 
-    function switchAuthTab(tab) {
+    window.switchAuthTab = function(tab) {
       document.getElementById('authAlert').classList.add('hidden');
+      document.getElementById('resetPasswordBox').classList.add('hidden');
       const isLogin = tab === 'login';
       document.getElementById('loginBox').classList.toggle('hidden', !isLogin);
       document.getElementById('registerBox').classList.toggle('hidden', isLogin);
@@ -359,30 +707,63 @@
       document.getElementById('tabRegister').className = !isLogin
         ? 'py-2.5 rounded-xl font-bold text-sm bg-white text-emerald-700 shadow-sm transition'
         : 'py-2.5 rounded-xl font-bold text-sm text-slate-500 hover:text-slate-800 transition';
-    }
+    };
 
-    function handleRegister() {
-      const name = document.getElementById('regName').value.trim();
-      const email = document.getElementById('regEmail').value.trim().toLowerCase();
-      const password = document.getElementById('regPassword').value.trim();
+    window.toggleResetPasswordBox = function(show) {
+      document.getElementById('authAlert').classList.add('hidden');
+      document.getElementById('loginBox').classList.toggle('hidden', show);
+      document.getElementById('resetPasswordBox').classList.toggle('hidden', !show);
+      if (show) {
+        document.getElementById('resetEmail').value = document.getElementById('loginEmail').value.trim();
+      }
+    };
 
-      if (!name) {
-        showAuthAlert('Lütfen adını ve soyadını gir.');
-        return;
-      }
-      if (!email || !email.includes('@')) {
-        showAuthAlert('Lütfen geçerli bir e-posta adresi gir.');
-        return;
-      }
-      if (password.length < 4) {
-        showAuthAlert('Şifren en az 4 karakter olmalıdır.');
-        return;
+    window.handlePasswordReset = async function() {
+      const email = normalizeEmail(document.getElementById('resetEmail').value);
+      const newPass = String(document.getElementById('resetNewPassword').value || '').trim();
+
+      if (!email || !email.includes('@')) return showAuthAlert('Lütfen kayıtlı e-posta adresini gir.');
+      if (newPass.length < 4) return showAuthAlert('Yeni şifren en az 4 karakter olmalıdır.');
+
+      const users = getLocalUsers();
+      let user = users[email];
+      if (!user) {
+        const cloudUser = await fetchUserFromCloud(email);
+        if (cloudUser) user = cloudUser;
       }
 
-      const users = getUsers();
-      if (users[email]) {
-        showAuthAlert('Bu e-posta adresi zaten kayıtlı. Giriş Yap sekmesini kullanabilirsin.');
-        return;
+      if (!user) {
+        return showAuthAlert('Bu e-posta adresiyle kayıtlı bir hesap bulunamadı. Lütfen önce Kayıt Ol sekmesini kullan.');
+      }
+
+      user.password = newPass;
+      users[email] = user;
+      saveLocalUsers(users);
+      await saveUserToCloud(user);
+
+      localStorage.setItem(DB_SESSION_KEY, email);
+      currentUser = user;
+      showToast('Şifren güncellendi ve giriş yapıldı!');
+      routeUser();
+    };
+
+    window.handleRegister = async function() {
+      const name = String(document.getElementById('regName').value || '').trim();
+      const email = normalizeEmail(document.getElementById('regEmail').value);
+      const password = String(document.getElementById('regPassword').value || '').trim();
+
+      if (!name) return showAuthAlert('Lütfen adını ve soyadını gir.');
+      if (!email || !email.includes('@')) return showAuthAlert('Lütfen geçerli bir e-posta adresi gir.');
+      if (password.length < 4) return showAuthAlert('Şifren en az 4 karakter olmalıdır.');
+
+      const users = getLocalUsers();
+      let existing = users[email];
+      if (!existing) {
+        existing = await fetchUserFromCloud(email);
+      }
+
+      if (existing) {
+        return showAuthAlert('Bu e-posta adresi zaten kayıtlı. Giriş Yap sekmesini kullanabilir veya şifreni sıfırlayabilirsin.');
       }
 
       const newUser = {
@@ -393,58 +774,90 @@
         meals: [],
         waterLiters: 0,
         lastWaterTimestamp: Date.now(),
+        weightHistory: [],
         emailLogs: []
       };
 
       users[email] = newUser;
-      saveUsers(users);
+      saveLocalUsers(users);
+      await saveUserToCloud(newUser);
       localStorage.setItem(DB_SESSION_KEY, email);
       currentUser = newUser;
 
-      showAuthAlert('Hesabın oluşturuldu! Kurulum ekranına yönlendiriliyorsun...', false);
-      setTimeout(() => {
+      showAuthAlert('Hesabın kalıcı olarak oluşturuldu! Kurulum ekranına yönlendiriliyorsun...', false);
+      setTimeout(() => routeUser(), 250);
+    };
+
+    window.handleLogin = async function() {
+      const email = normalizeEmail(document.getElementById('loginEmail').value);
+      const password = String(document.getElementById('loginPassword').value || '').trim();
+
+      if (!email || !password) return showAuthAlert('Lütfen e-posta adresini ve şifreni gir.');
+
+      const btn = document.getElementById('btnLoginSubmit');
+      btn.disabled = true;
+      btn.textContent = 'Kontrol Ediliyor...';
+
+      try {
+        const users = getLocalUsers();
+        let user = users[email];
+
+        // Yerelde bulunamazsa buluttan getir
+        if (!user) {
+          const cloudUser = await fetchUserFromCloud(email);
+          if (cloudUser) {
+            user = { ...cloudUser, email };
+            users[email] = user;
+            saveLocalUsers(users);
+          }
+        }
+
+        if (!user) {
+          return showAuthAlert('Bu e-posta adresiyle kayıtlı bir hesap bulunamadı. Lütfen önce Kayıt Ol sekmesinden hesap oluştur.');
+        }
+
+        const storedPass = String(user.password || '').trim();
+        if (storedPass !== password) {
+          return showAuthAlert('Şifre hatalı! Büyük/küçük harf duyarlıdır. Hatırlamıyorsan "Şifremi Unuttum / Sıfırla" bağlantısını kullanabilirsin.');
+        }
+
+        localStorage.setItem(DB_SESSION_KEY, email);
+        currentUser = user;
         routeUser();
-      }, 300);
-    }
-
-    function handleLogin() {
-      const email = document.getElementById('loginEmail').value.trim().toLowerCase();
-      const password = document.getElementById('loginPassword').value.trim();
-
-      if (!email || !password) {
-        showAuthAlert('Lütfen e-posta adresini ve şifreni gir.');
-        return;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Giriş Yap';
       }
+    };
 
-      const users = getUsers();
-      const user = users[email];
-      if (!user || user.password !== password) {
-        showAuthAlert('E-posta adresi veya şifre hatalı.');
-        return;
-      }
-
-      localStorage.setItem(DB_SESSION_KEY, email);
-      currentUser = user;
-      routeUser();
-    }
-
-    function logoutUser() {
+    window.logoutUser = function() {
+      // Çıkış yaparken SADECE aktif oturum anahtarını kaldırıyoruz; kullanıcı hesap veritabanı kalıcı olarak korunur!
       localStorage.removeItem(DB_SESSION_KEY);
+      const lastEmail = currentUser?.email || '';
       currentUser = null;
       if (waterCheckInterval) clearInterval(waterCheckInterval);
+
       document.getElementById('dashboardScreen').classList.add('hidden');
       document.getElementById('setupScreen').classList.add('hidden');
       document.getElementById('authScreen').classList.remove('hidden');
       document.getElementById('authAlert').classList.add('hidden');
-    }
+      switchAuthTab('login');
+      if (lastEmail) {
+        document.getElementById('loginEmail').value = lastEmail;
+        document.getElementById('loginPassword').value = '';
+      }
+      renderSavedAccountsBar();
+      showToast('Güvenli çıkış yapıldı. Hesabın ve verilerin hafızada korunuyor.', 'info');
+    };
 
     function routeUser() {
-      const savedEmail = localStorage.getItem(DB_SESSION_KEY);
-      const users = getUsers();
+      const savedEmail = normalizeEmail(localStorage.getItem(DB_SESSION_KEY));
+      const users = getLocalUsers();
       if (!savedEmail || !users[savedEmail]) {
         document.getElementById('authScreen').classList.remove('hidden');
         document.getElementById('setupScreen').classList.add('hidden');
         document.getElementById('dashboardScreen').classList.add('hidden');
+        renderSavedAccountsBar();
         return;
       }
 
@@ -453,6 +866,7 @@
 
       if (!currentUser.profile) {
         document.getElementById('setupStartDate').value = new Date().toISOString().split('T')[0];
+        document.getElementById('deleteAccountSection').classList.add('hidden');
         document.getElementById('setupScreen').classList.remove('hidden');
         document.getElementById('dashboardScreen').classList.add('hidden');
       } else {
@@ -463,25 +877,34 @@
       }
     }
 
-    function saveInitialSetup() {
+    function calculateTargets(weight, height, age, gender, activityFactor, deficitPace) {
+      const bmr = (10 * weight) + (6.25 * height) - (5 * age) + (gender === 'male' ? 5 : -161);
+      const tdee = bmr * parseFloat(activityFactor);
+      const minSafeCal = gender === 'male' ? 1400 : 1200;
+      const dailyCalTarget = Math.max(minSafeCal, Math.round((tdee - parseInt(deficitPace, 10)) / 10) * 10);
+      const waterBonus = parseFloat(activityFactor) >= 1.55 ? 0.5 : 0;
+      const waterTarget = parseFloat((((weight * 32) / 1000) + waterBonus).toFixed(1));
+      return { dailyCalTarget, waterTarget };
+    }
+
+    window.saveInitialSetup = function() {
       const startDate = document.getElementById('setupStartDate').value;
       const gender = document.getElementById('setupGender').value;
       const currentWeight = parseFloat(document.getElementById('setupCurrentWeight').value);
       const targetWeight = parseFloat(document.getElementById('setupTargetWeight').value);
       const height = parseInt(document.getElementById('setupHeight').value, 10);
       const age = parseInt(document.getElementById('setupAge').value, 10);
+      const activityFactor = document.getElementById('setupActivity').value;
+      const deficitPace = document.getElementById('setupPace').value;
 
       if (!startDate || isNaN(currentWeight) || isNaN(targetWeight) || isNaN(height) || isNaN(age)) {
-        alert('Lütfen tüm alanları eksiksiz doldur.');
+        showToast('Lütfen tüm profil alanlarını eksiksiz doldur.', 'error');
         return;
       }
 
-      // Mifflin-St Jeor Kalori Hesabı (Masa başı aktivite + 550 kcal açık)
-      let bmr = (10 * currentWeight) + (6.25 * height) - (5 * age) + (gender === 'male' ? 5 : -161);
-      let tdee = bmr * 1.2;
-      let dailyCalTarget = Math.max(1300, Math.round((tdee - 550) / 10) * 10);
-      let waterTarget = parseFloat(((currentWeight * 32) / 1000).toFixed(1));
+      const { dailyCalTarget, waterTarget } = calculateTargets(currentWeight, height, age, gender, activityFactor, deficitPace);
 
+      const isFirstSetup = !currentUser.profile;
       currentUser.profile = {
         startDate,
         gender,
@@ -490,15 +913,27 @@
         targetWeight,
         height,
         age,
+        activityFactor,
+        deficitPace,
         dailyCalTarget,
         waterTarget
       };
 
+      if (!Array.isArray(currentUser.weightHistory)) currentUser.weightHistory = [];
+      if (isFirstSetup || currentUser.weightHistory.length === 0) {
+        currentUser.weightHistory.unshift({
+          id: Date.now(),
+          weight: currentWeight,
+          date: new Date().toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' }),
+          note: 'Başlangıç Tartısı'
+        });
+      }
+
       persistCurrentUser();
       routeUser();
-    }
+    };
 
-    function openSetupEdit() {
+    window.openSetupEdit = function() {
       const p = currentUser.profile;
       document.getElementById('setupStartDate').value = p.startDate;
       document.getElementById('setupGender').value = p.gender;
@@ -506,22 +941,59 @@
       document.getElementById('setupTargetWeight').value = p.targetWeight;
       document.getElementById('setupHeight').value = p.height;
       document.getElementById('setupAge').value = p.age;
+      document.getElementById('setupActivity').value = p.activityFactor || '1.2';
+      document.getElementById('setupPace').value = p.deficitPace || '500';
+      document.getElementById('deleteAccountConfirmBox').classList.add('hidden');
+      document.getElementById('deleteAccountSection').classList.remove('hidden');
       document.getElementById('dashboardScreen').classList.add('hidden');
       document.getElementById('setupScreen').classList.remove('hidden');
-    }
+    };
+
+    // İKİ AŞAMALI HESAP VE TÜM VERİLERİ KALICI SİLME FONKSİYONLARI
+    window.requestAccountDelete = function() {
+      document.getElementById('deleteAccountConfirmBox').classList.remove('hidden');
+    };
+
+    window.cancelAccountDelete = function() {
+      document.getElementById('deleteAccountConfirmBox').classList.add('hidden');
+    };
+
+    window.confirmAccountDelete = async function() {
+      if (!currentUser) return;
+      const emailToDelete = normalizeEmail(currentUser.email);
+      const users = getLocalUsers();
+      delete users[emailToDelete];
+      saveLocalUsers(users);
+      await deleteUserFromCloud(emailToDelete);
+      localStorage.removeItem(DB_SESSION_KEY);
+      currentUser = null;
+      if (waterCheckInterval) clearInterval(waterCheckInterval);
+
+      document.getElementById('setupScreen').classList.add('hidden');
+      document.getElementById('dashboardScreen').classList.add('hidden');
+      document.getElementById('authScreen').classList.remove('hidden');
+      renderSavedAccountsBar();
+      showAuthAlert('Hesabın ve tüm kayıtların kalıcı olarak silindi.', false);
+    };
 
     function persistCurrentUser() {
-      const users = getUsers();
-      users[currentUser.email] = currentUser;
-      saveUsers(users);
+      if (!currentUser || !currentUser.email) return;
+      const norm = normalizeEmail(currentUser.email);
+      currentUser.email = norm;
+      const users = getLocalUsers();
+      users[norm] = currentUser;
+      saveLocalUsers(users);
+      saveUserToCloud(currentUser);
     }
 
     function renderDashboard() {
+      if (!currentUser || !currentUser.profile) return;
       const p = currentUser.profile;
       document.getElementById('dashUserName').textContent = currentUser.name;
       document.getElementById('dashUserEmail').textContent = currentUser.email;
       document.getElementById('mailTargetDisp').textContent = currentUser.email;
       document.getElementById('dashDateLabel').textContent = new Date().toLocaleDateString('tr-TR', { weekday: 'long', day: 'numeric', month: 'long' });
+      document.getElementById('dashActivityBadge').textContent = ACTIVITY_LABELS[p.activityFactor] || 'Masa Başı / Hareketsiz';
 
       // Kalori Durumu
       const consumed = currentUser.meals.reduce((acc, m) => acc + Number(m.cal || 0), 0);
@@ -556,6 +1028,7 @@
 
       renderMeals();
       renderWeighInSchedule();
+      renderWeightHistory();
       renderWarmMealReminder();
       renderEmailLogs();
     }
@@ -563,7 +1036,7 @@
     function renderWarmMealReminder() {
       const hour = new Date().getHours();
       let slot = 'Ara Öğün';
-      let msg = 'Masa başında odaklanmanı korumak için şekersiz beyaz çay ve 1 bardak su iyi gider!';
+      let msg = 'Odaklanmanı korumak için şekersiz beyaz çay ve 1 bardak su iyi gider!';
       if (hour >= 6 && hour < 11) {
         slot = 'Güne Başlangıç • Kahvaltı Vakti';
         msg = 'Güne protein ve lifle başlaman tüm gün iştahını dengeler. Kahvaltını ekledin mi?';
@@ -578,60 +1051,215 @@
       document.getElementById('reminderSlotText').textContent = msg;
     }
 
-    function quickFillMeal(type, name, cal) {
-      document.getElementById('mealTypeInput').value = type;
-      document.getElementById('mealNameInput').value = name;
-      document.getElementById('mealCalInput').value = cal;
-      addMealEntry();
+    function getSelectedPortion() {
+      const raw = document.getElementById('mealPortionInput').value;
+      const parts = raw.split('|');
+      return {
+        multiplier: parseFloat(parts[0]) || 1,
+        label: parts[1] || '1 Porsiyon'
+      };
     }
 
-    function addMealEntry() {
-      const type = document.getElementById('mealTypeInput').value;
-      const name = document.getElementById('mealNameInput').value.trim();
-      const cal = parseInt(document.getElementById('mealCalInput').value, 10);
+    async function fetchWithRetry(url, options, maxRetries = 3) {
+      let delay = 1000;
+      for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        try {
+          const response = await fetch(url, options);
+          if (response.ok) return response;
+          if (response.status === 429 || response.status >= 500) {
+            if (attempt === maxRetries) return response;
+          } else {
+            return response;
+          }
+        } catch (err) {
+          if (attempt === maxRetries) throw err;
+        }
+        await new Promise(res => setTimeout(res, delay));
+        delay *= 2;
+      }
+    }
 
-      if (!name || isNaN(cal) || cal < 0) {
-        alert('Lütfen öğün adını ve kalorisini gir.');
+    // YEMEĞİN ADINDAN GEMİNİ API İLE OTOMATİK KALORİ VE MAKRO BULMA
+    async function estimateFoodNutrition(foodName, portionMultiplier, portionLabel) {
+      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+      const prompt = `Sen uzman bir Türk diyetisyensin. Kullanıcının yazdığı şu yiyecek ve porsiyon için gerçekçi besin değerlerini hesapla:
+Yiyecek: "${foodName}"
+Seçilen Porsiyon: "${portionLabel}" (Çarpan: ${portionMultiplier})
+Lütfen seçilen bu porsiyon miktarına göre toplam kalori (kcal), protein (g), karbonhidrat (g), yağ (g) değerlerini ve tek cümlelik kısa bir diyet yorumunu döndür.`;
+
+      const payload = {
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: {
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: "OBJECT",
+            properties: {
+              standardizedName: { type: "STRING" },
+              calories: { type: "INTEGER" },
+              proteinGrams: { type: "NUMBER" },
+              carbsGrams: { type: "NUMBER" },
+              fatGrams: { type: "NUMBER" },
+              dietTip: { type: "STRING" }
+            },
+            required: ["standardizedName", "calories", "proteinGrams", "carbsGrams", "fatGrams", "dietTip"]
+          }
+        }
+      };
+
+      const res = await fetchWithRetry(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await res.json();
+      const jsonText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!jsonText) throw new Error('Besin verisi alınamadı');
+      return JSON.parse(jsonText);
+    }
+
+    window.autoCalculateAndAddMeal = async function() {
+      const type = document.getElementById('mealTypeInput').value;
+      const foodName = document.getElementById('mealNameInput').value.trim();
+
+      if (!foodName) {
+        showToast('Lütfen ne yediğini yaz (Örn: Izgara köfte ve ayran).', 'error');
         return;
       }
 
+      const { multiplier, label } = getSelectedPortion();
+      const btn = document.getElementById('btnAutoCalcMeal');
+      const btnLabel = document.getElementById('btnAutoCalcLabel');
+      const feedbackBox = document.getElementById('aiNutritionFeedback');
+
+      btn.disabled = true;
+      btn.classList.add('opacity-75');
+      btnLabel.textContent = 'Kalori & Makrolar Otomatik Hesaplanıyor...';
+
+      try {
+        const result = await estimateFoodNutrition(foodName, multiplier, label);
+
+        currentUser.meals.unshift({
+          id: Date.now(),
+          type,
+          name: result.standardizedName || foodName,
+          portionLabel: label,
+          cal: Math.max(0, Math.round(result.calories)),
+          protein: Math.round(result.proteinGrams || 0),
+          carbs: Math.round(result.carbsGrams || 0),
+          fat: Math.round(result.fatGrams || 0),
+          time: new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })
+        });
+
+        feedbackBox.innerHTML = `
+          <div class="flex flex-wrap items-center justify-between gap-2 font-extrabold text-emerald-900 mb-1">
+            <span>✅ ${result.standardizedName} (${label}) eklendi!</span>
+            <span class="px-2.5 py-0.5 rounded-lg bg-emerald-600 text-white">${result.calories} kcal</span>
+          </div>
+          <div class="flex gap-3 text-[11px] font-bold text-emerald-800 mb-1">
+            <span>🥩 Protein: ${Math.round(result.proteinGrams)}g</span>
+            <span>🌾 Karb: ${Math.round(result.carbsGrams)}g</span>
+            <span>🥑 Yağ: ${Math.round(result.fatGrams)}g</span>
+          </div>
+          <p class="text-slate-700">${result.dietTip}</p>
+        `;
+        feedbackBox.classList.remove('hidden');
+
+        document.getElementById('mealNameInput').value = '';
+        document.getElementById('mealPortionInput').value = '1|1 Porsiyon (Tam)';
+        persistCurrentUser();
+        renderDashboard();
+        showToast(`${result.standardizedName} (+${result.calories} kcal) günlüğüne eklendi!`);
+      } catch (err) {
+        showToast('Kalori hesaplanırken bağlantı sorunu oluştu, tekrar dener misin?', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.classList.remove('opacity-75');
+        btnLabel.textContent = 'Kalorisini Otomatik Bul ve Günlüğe Ekle';
+      }
+    };
+
+    window.quickAutoMeal = function(type, name, baseCal, p, c, f) {
+      const { multiplier, label } = getSelectedPortion();
+      const finalCal = Math.round(baseCal * multiplier);
       currentUser.meals.unshift({
         id: Date.now(),
         type,
         name,
-        cal,
+        portionLabel: label,
+        cal: finalCal,
+        protein: Math.round(p * multiplier),
+        carbs: Math.round(c * multiplier),
+        fat: Math.round(f * multiplier),
         time: new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })
       });
-
-      document.getElementById('mealNameInput').value = '';
-      document.getElementById('mealCalInput').value = '';
       persistCurrentUser();
       renderDashboard();
-    }
+      showToast(`${name} (${label}) • ${finalCal} kcal eklendi!`);
+    };
 
-    function deleteMeal(id) {
+    window.deleteMeal = function(id) {
       currentUser.meals = currentUser.meals.filter(m => m.id !== id);
       persistCurrentUser();
       renderDashboard();
-    }
+      showToast('Öğün kaydı silindi.', 'info');
+    };
+
+    window.clearAllMeals = function() {
+      if (!currentUser || currentUser.meals.length === 0) {
+        showToast('Silinecek öğün kaydı bulunmuyor.', 'info');
+        return;
+      }
+      currentUser.meals = [];
+      document.getElementById('aiNutritionFeedback').classList.add('hidden');
+      persistCurrentUser();
+      renderDashboard();
+      showToast('Bugünkü tüm öğün kayıtları temizlendi.', 'info');
+    };
+
+    window.resetWaterLog = function() {
+      if (!currentUser) return;
+      currentUser.waterLiters = 0;
+      currentUser.lastWaterTimestamp = Date.now();
+      persistCurrentUser();
+      renderDashboard();
+      showToast('Su sayacı 0.00 L olarak sıfırlandı.', 'info');
+    };
+
+    window.resetFullDay = function() {
+      if (!currentUser) return;
+      currentUser.meals = [];
+      currentUser.waterLiters = 0;
+      currentUser.lastWaterTimestamp = Date.now();
+      document.getElementById('aiNutritionFeedback').classList.add('hidden');
+      persistCurrentUser();
+      renderDashboard();
+      showToast('Günün tüm öğün ve su kayıtları sıfırlandı!');
+    };
 
     function renderMeals() {
       const container = document.getElementById('mealListContainer');
       document.getElementById('mealCountLabel').textContent = currentUser.meals.length + ' kayıt';
       if (currentUser.meals.length === 0) {
-        container.innerHTML = '<div class="text-center py-8 text-sm text-slate-400">Henüz öğün kaydı girilmedi. Yukarıdan ilk öğününü ekleyebilirsin.</div>';
+        container.innerHTML = '<div class="text-center py-8 text-sm text-slate-400">Henüz öğün kaydı girilmedi. Yukarıdan yediğini yaz ve otomatik hesapla!</div>';
         return;
       }
       container.innerHTML = currentUser.meals.map(m => `
         <div class="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
           <div>
-            <div class="flex items-center gap-2">
+            <div class="flex flex-wrap items-center gap-1.5">
               <span class="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-700 text-[10px] font-bold">${m.type}</span>
+              <span class="px-2 py-0.5 rounded-md bg-teal-50 text-teal-700 text-[10px] font-bold">${m.portionLabel || '1 Porsiyon'}</span>
               <span class="text-[11px] text-slate-400">${m.time}</span>
             </div>
             <div class="text-sm font-bold text-slate-800 mt-1">${m.name}</div>
+            ${(m.protein !== undefined) ? `
+              <div class="text-[11px] text-slate-500 mt-0.5">
+                P: <strong>${m.protein}g</strong> • K: <strong>${m.carbs}g</strong> • Y: <strong>${m.fat}g</strong>
+              </div>
+            ` : ''}
           </div>
-          <div class="flex items-center gap-3">
+          <div class="flex items-center gap-3 shrink-0">
             <span class="text-sm font-extrabold text-emerald-600">${m.cal} kcal</span>
             <button type="button" onclick="deleteMeal(${m.id})" class="text-rose-400 hover:text-rose-600 text-xs font-bold">Sil</button>
           </div>
@@ -639,23 +1267,86 @@
       `).join('');
     }
 
-    function addWater(liters) {
+    window.addWater = function(liters) {
       currentUser.waterLiters = parseFloat((currentUser.waterLiters + liters).toFixed(2));
       currentUser.lastWaterTimestamp = Date.now();
       persistCurrentUser();
       renderDashboard();
-    }
+      showToast(`💧 +${liters} L su eklendi! Toplam: ${currentUser.waterLiters.toFixed(2)} L`, 'info');
+    };
 
-    function updateCurrentWeight() {
+    window.updateCurrentWeight = function() {
       const val = parseFloat(document.getElementById('newWeightInput').value);
       if (isNaN(val) || val < 30 || val > 300) {
-        alert('Geçerli bir kilo değeri gir.');
+        showToast('Lütfen geçerli bir kilo değeri gir.', 'error');
         return;
       }
-      currentUser.profile.currentWeight = val;
+      const p = currentUser.profile;
+      p.currentWeight = val;
+      const updated = calculateTargets(val, p.height, p.age, p.gender, p.activityFactor || '1.2', p.deficitPace || '500');
+      p.dailyCalTarget = updated.dailyCalTarget;
+      p.waterTarget = updated.waterTarget;
+
+      if (!Array.isArray(currentUser.weightHistory)) currentUser.weightHistory = [];
+      currentUser.weightHistory.unshift({
+        id: Date.now(),
+        weight: val,
+        date: new Date().toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' }),
+        note: 'Güncel Tartı'
+      });
+
       document.getElementById('newWeightInput').value = '';
       persistCurrentUser();
       renderDashboard();
+      showToast(`Tartı güncellendi: ${val.toFixed(2)} kg`);
+    };
+
+    window.deleteWeightEntry = function(id) {
+      if (!Array.isArray(currentUser.weightHistory)) return;
+      currentUser.weightHistory = currentUser.weightHistory.filter(w => w.id !== id);
+      if (currentUser.weightHistory.length > 0) {
+        const latest = currentUser.weightHistory[0].weight;
+        const p = currentUser.profile;
+        p.currentWeight = latest;
+        const updated = calculateTargets(latest, p.height, p.age, p.gender, p.activityFactor || '1.2', p.deficitPace || '500');
+        p.dailyCalTarget = updated.dailyCalTarget;
+        p.waterTarget = updated.waterTarget;
+      }
+      persistCurrentUser();
+      renderDashboard();
+      showToast('Tartı kaydı silindi.', 'info');
+    };
+
+    window.clearWeightHistory = function() {
+      if (!currentUser) return;
+      currentUser.weightHistory = [{
+        id: Date.now(),
+        weight: currentUser.profile.currentWeight,
+        date: new Date().toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' }),
+        note: 'Mevcut Kilo'
+      }];
+      persistCurrentUser();
+      renderDashboard();
+      showToast('Eski tartı geçmişi temizlendi.', 'info');
+    };
+
+    function renderWeightHistory() {
+      const box = document.getElementById('weightHistoryList');
+      if (!box) return;
+      const list = currentUser.weightHistory || [];
+      if (list.length === 0) {
+        box.innerHTML = '<div class="text-slate-400 py-1">Kayıtlı tartı geçmişi yok.</div>';
+        return;
+      }
+      box.innerHTML = list.map(item => `
+        <div class="flex items-center justify-between px-2.5 py-1.5 rounded-xl bg-slate-50 border border-slate-100">
+          <div>
+            <span class="font-extrabold text-slate-800">${Number(item.weight).toFixed(2)} kg</span>
+            <span class="text-[10px] text-slate-400 ml-1.5">${item.date}</span>
+          </div>
+          <button type="button" onclick="deleteWeightEntry(${item.id})" class="text-rose-400 hover:text-rose-600 font-bold text-[11px]">Sil</button>
+        </div>
+      `).join('');
     }
 
     function renderWeighInSchedule() {
@@ -692,24 +1383,89 @@
       document.getElementById('nextWeighCountdown').textContent = nextDaysLeft === 0 ? 'Bugün Tartı Günü' : (nextDaysLeft ? nextDaysLeft + ' gün kaldı' : 'Plan Aktif');
     }
 
-    function triggerWaterEmailAlert(manual = false) {
+    window.triggerWaterEmailAlert = function(manual = false) {
       const timeStr = new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
-      const msg = `${timeStr} • ${currentUser.email} adresine su içme hatırlatma e-postası gönderildi (${manual ? 'Manuel Test' : '2 saat su girişi yapılmadı'}).`;
-      currentUser.emailLogs.unshift(msg);
+      currentUser.emailLogs.unshift({
+        id: Date.now(),
+        text: `${timeStr} • ${currentUser.email} adresine su içme hatırlatma e-postası gönderildi (${manual ? 'Manuel Test' : '2 saat su girişi yapılmadı'}).`
+      });
       persistCurrentUser();
       renderEmailLogs();
       if (manual) {
-        alert(`Hatırlatma maili ${currentUser.email} adresine iletildi!`);
+        showToast(`Hatırlatma maili ${currentUser.email} adresine iletildi!`, 'info');
       }
-    }
+    };
+
+    window.deleteEmailLog = function(id) {
+      currentUser.emailLogs = currentUser.emailLogs.filter(item => (typeof item === 'object' ? item.id !== id : true));
+      persistCurrentUser();
+      renderEmailLogs();
+    };
+
+    window.clearEmailLogs = function() {
+      currentUser.emailLogs = [];
+      persistCurrentUser();
+      renderEmailLogs();
+      showToast('Bildirim geçmişi temizlendi.', 'info');
+    };
 
     function renderEmailLogs() {
       const box = document.getElementById('emailLogContainer');
-      if (!currentUser.emailLogs || currentUser.emailLogs.length === 0) return;
-      box.innerHTML = currentUser.emailLogs.map(log => `
-        <div class="p-2.5 rounded-xl bg-cyan-50 border border-cyan-100 text-cyan-900 font-medium">${log}</div>
-      `).join('');
+      if (!currentUser.emailLogs || currentUser.emailLogs.length === 0) {
+        box.innerHTML = '<div class="p-2.5 rounded-xl bg-slate-50 text-slate-400">Su takibi aktif. Gecikme olursa bildirim burada ve mail kutunda görünür.</div>';
+        return;
+      }
+      box.innerHTML = currentUser.emailLogs.map((log, idx) => {
+        const isObj = typeof log === 'object' && log !== null;
+        const msgText = isObj ? log.text : log;
+        const logId = isObj ? log.id : idx;
+        return `
+          <div class="p-2.5 rounded-xl bg-cyan-50 border border-cyan-100 text-cyan-900 font-medium flex items-start justify-between gap-2">
+            <span>${msgText}</span>
+            ${isObj ? `<button type="button" onclick="deleteEmailLog(${logId})" class="text-rose-400 hover:text-rose-600 font-bold text-[10px] shrink-0">Sil</button>` : ''}
+          </div>
+        `;
+      }).join('');
     }
+
+    // YEDEK DIŞA AKTARMA VE GERİ YÜKLEME
+    window.exportUserBackup = function() {
+      if (!currentUser) return;
+      const dataStr = JSON.stringify(currentUser, null, 2);
+      const blob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `arda-ile-fit-kal-${currentUser.email.split('@')[0]}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Yedek dosyan cihazına indirildi!');
+    };
+
+    window.importUserBackup = function(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (!imported || !imported.email || !imported.profile) {
+            showToast('Geçersiz yedek dosyası.', 'error');
+            return;
+          }
+          imported.email = currentUser.email;
+          imported.password = currentUser.password;
+          currentUser = imported;
+          persistCurrentUser();
+          renderDashboard();
+          showToast('Yedek verilerin başarıyla geri yüklendi!');
+        } catch (err) {
+          showToast('Yedek dosyası okunamadı.', 'error');
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = '';
+    };
 
     function startWaterWatcher() {
       if (waterCheckInterval) clearInterval(waterCheckInterval);
@@ -724,7 +1480,7 @@
       }, 60000);
     }
 
-    function setViewMode(mode) {
+    window.setViewMode = function(mode) {
       const wrapper = document.getElementById('appWrapper');
       const bottomNav = document.getElementById('mobileBottomNav');
       const btnD = document.getElementById('btnDesktopView');
@@ -741,817 +1497,38 @@
         btnD.className = 'px-3 py-1 rounded-lg font-semibold bg-emerald-500 text-white transition';
         btnM.className = 'px-3 py-1 rounded-lg font-semibold text-slate-300 hover:text-white transition';
       }
-    }
+    };
 
-    function focusMealInput() {
-      document.getElementById('mealNameInput').focus();
-    }
+    window.focusMealInput = function() {
+      const inp = document.getElementById('mealNameInput');
+      inp.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      inp.focus();
+    };
 
-    function scrollToSec(id) {
+    window.scrollToSec = function(id) {
       const el = document.getElementById(id);
       if (el) el.scrollIntoView({ behavior: 'smooth' });
-    }
+    };
 
-    // Sayfa yüklendiğinde oturum kontrolü ve ekran uyumu
-    window.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('DOMContentLoaded', async () => {
       if (window.innerWidth < 768) {
         document.getElementById('mobileBottomNav').classList.remove('hidden');
       }
+      migrateLegacyUsersIfNeeded();
       routeUser();
+      await initCloudStorage();
+      // Bulut verileri geldikten sonra oturumu ve kayıtlı hesap listesini tazele
+      if (!currentUser) {
+        renderSavedAccountsBar();
+      } else {
+        const refreshed = getLocalUsers()[normalizeEmail(currentUser.email)];
+        if (refreshed) {
+          currentUser = refreshed;
+          renderDashboard();
+        }
+      }
     });
   </script>
 </body>
 </html>
- background: linear-gradient(135deg, #059669 0%, #0284c7 55%, #f97316 100%);
-        }
-        .emerald-sky-gradient {
-            background: linear-gradient(135deg, #10b981 0%, #0ea5e9 100%);
-        }
-        .coral-gradient {
-            background: linear-gradient(135deg, #f97316 0%, #fb7185 100%);
-        }
-        .circle-progress {
-            transform: rotate(-90deg);
-            transform-origin: 50% 50%;
-            transition: stroke-dashoffset 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        /* Su Dalgası Animasyonu */
-        .water-tank {
-            position: relative;
-            overflow: hidden;
-            background: #e0f2fe;
-        }
-        .water-fill {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
-            transition: height 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .water-wave {
-            position: absolute;
-            top: -10px;
-            left: -50%;
-            width: 200%;
-            height: 20px;
-            background: rgba(255, 255, 255, 0.35);
-            border-radius: 43%;
-            animation: waveRotate 5s linear infinite;
-        }
-        @keyframes waveRotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .pulse-dot {
-            animation: pulseAnim 1.4s infinite ease-in-out both;
-        }
-        .pulse-dot:nth-child(1) { animation-delay: -0.32s; }
-        .pulse-dot:nth-child(2) { animation-delay: -0.16s; }
-        @keyframes pulseAnim {
-            0%, 80%, 100% { transform: scale(0); opacity: 0.4; }
-            40% { transform: scale(1); opacity: 1; }
-        }
-        .float-blob {
-            position: fixed;
-            border-radius: 9999px;
-            filter: blur(75px);
-            z-index: -1;
-            opacity: 0.45;
-            pointer-events: none;
-        }
-        /* Dokunmatik Buton Standartları ve Mobil/Masaüstü Görünüm Çerçevesi */
-        .touch-target {
-            min-height: 44px;
-        }
-        body.mobile-preview-mode {
-            background: #0f172a;
-            padding: 16px 8px;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-        }
-        body.mobile-preview-mode #app-shell {
-            width: 100%;
-            max-width: 395px;
-            min-height: 812px;
-            background: linear-gradient(135deg, #ecfdf5 0%, #eff6ff 48%, #fff7ed 100%);
-            border-radius: 2.75rem;
-            border: 8px solid #1e293b;
-            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.65), 0 0 0 2px rgba(255, 255, 255, 0.12);
-            overflow-x: hidden;
-            overflow-y: auto;
-            position: relative;
-        }
-        body.mobile-preview-mode #dashboard-view main {
-            padding-left: 12px;
-            padding-right: 12px;
-        }
-        body.mobile-preview-mode .desktop-grid-3,
-        body.mobile-preview-mode .desktop-grid-12 {
-            grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
-        }
-        body.mobile-preview-mode .desktop-col-span {
-            grid-column: span 1 / span 1 !important;
-        }
-        body.mobile-preview-mode #mobile-bottom-nav {
-            display: flex !important;
-            position: sticky;
-            bottom: 0;
-        }
-        body.mobile-preview-mode .hide-in-mobile-mode {
-            display: none !important;
-        }
-        @media (max-width: 767px) {
-            #mobile-bottom-nav {
-                display: flex;
-            }
-            #dashboard-view {
-                padding-bottom: 5.5rem;
-            }
-        }
-    </style>
-</head>
-<body class="antialiased selection:bg-emerald-200 selection:text-emerald-950">
-
-    <!-- Arka Plan Canlı Renk Küreleri -->
-    <div class="float-blob w-80 h-80 bg-emerald-300 top-[-4rem] left-[-4rem]"></div>
-    <div class="float-blob w-96 h-96 bg-sky-300 bottom-[-6rem] right-[-4rem]"></div>
-    <div class="float-blob w-72 h-72 bg-orange-200 top-1/3 right-1/4"></div>
-
-    <!-- Bildirim Toast Alanı -->
-    <div id="toast-container" class="fixed top-20 right-4 left-4 sm:left-auto sm:right-5 z-50 flex flex-col gap-2.5 sm:max-w-sm pointer-events-none"></div>
-
-    <!-- Tüm Uygulama Kabuğu (Masaüstü Tam Ekran / Mobil 395px Çerçeve) -->
-    <div id="app-shell" class="w-full min-h-screen flex flex-col">
-
-    <!-- Başlangıç Yükleniyor Ekranı -->
-    <div id="global-loader" class="fixed inset-0 bg-white/95 backdrop-blur-lg z-50 flex flex-col items-center justify-center">
-        <div class="w-16 h-16 rounded-3xl emerald-sky-gradient text-white flex items-center justify-center shadow-xl shadow-emerald-200 mb-4 animate-bounce">
-            <i class="fa-solid fa-fire-flame-curved text-2xl"></i>
-        </div>
-        <h2 class="text-lg font-extrabold text-slate-800">Arda ile Fit Kal</h2>
-        <p class="text-xs text-slate-500 mt-1">Güvenli oturum kontrol ediliyor...</p>
-    </div>
-
-    <!-- ===================================================================== -->
-    <!-- 1. ZORUNLU GİRİŞ & KAYIT EKRANI (MİSAFİR GİRİŞİ YOK)                   -->
-    <!-- ===================================================================== -->
-    <div id="auth-view" class="hidden flex-1 flex items-center justify-center p-4">
-        <div class="glass-card rounded-[2rem] max-w-md w-full p-6 sm:p-9 shadow-2xl">
-            <div class="text-center mb-6">
-                <div class="w-16 h-16 rounded-3xl emerald-sky-gradient text-white flex items-center justify-center mx-auto shadow-lg shadow-sky-200 mb-4">
-                    <i class="fa-solid fa-fire-flame-curved text-2xl"></i>
-                </div>
-                <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-emerald-600 via-sky-600 to-orange-500 bg-clip-text text-transparent">
-                    Arda ile Fit Kal
-                </h1>
-                <p class="text-xs sm:text-sm text-slate-500 mt-1.5">
-                    Kişisel verileriniz için e-posta hesabınızla giriş yapın
-                </p>
-            </div>
-
-            <!-- Giriş / Kayıt Sekmeleri -->
-            <div class="grid grid-cols-2 gap-1.5 p-1.5 bg-slate-100/90 rounded-2xl mb-5">
-                <button type="button" id="tab-login" onclick="switchAuthMode('login')" class="touch-target py-2.5 text-xs sm:text-sm font-bold rounded-xl bg-white text-emerald-700 shadow-sm transition">
-                    Giriş Yap
-                </button>
-                <button type="button" id="tab-register" onclick="switchAuthMode('register')" class="touch-target py-2.5 text-xs sm:text-sm font-bold rounded-xl text-slate-500 hover:text-slate-800 transition">
-                    Yeni Kayıt Ol
-                </button>
-            </div>
-
-            <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-4">
-                <div id="register-name-group" class="hidden">
-                    <label class="block text-xs font-semibold text-slate-700 mb-1.5">Adınız Soyadınız</label>
-                    <div class="relative">
-                        <i class="fa-regular fa-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-                        <input type="text" id="auth-name" placeholder="Örn: Arda Yılmaz"
-                            class="touch-target w-full pl-11 pr-4 py-3 rounded-2xl bg-white border border-slate-200 text-base sm:text-sm focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1.5">E-posta Adresiniz</label>
-                    <div class="relative">
-                        <i class="fa-regular fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-                        <input type="email" id="auth-email" required placeholder="ornek@mail.com"
-                            class="touch-target w-full pl-11 pr-4 py-3 rounded-2xl bg-white border border-slate-200 text-base sm:text-sm focus:outline-none focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10 transition">
-                    </div>
-                    <p class="text-[11px] text-slate-400 mt-1">Su ve tartı hatırlatmaları bu adrese tanımlanır.</p>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1.5">Şifreniz</label>
-                    <div class="relative">
-                        <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-                        <input type="password" id="auth-password" required minlength="6" placeholder="En az 6 karakter"
-                            class="touch-target w-full pl-11 pr-4 py-3 rounded-2xl bg-white border border-slate-200 text-base sm:text-sm focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition">
-                    </div>
-                </div>
-
-                <div id="auth-error" class="hidden p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium"></div>
-
-                <button type="submit" id="auth-btn" class="touch-target w-full py-3.5 rounded-2xl emerald-sky-gradient hover:opacity-95 text-white font-bold text-sm shadow-lg shadow-emerald-200/80 transition transform active:scale-[0.99]">
-                    Giriş Yap
-                </button>
-            </form>
-
-            <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-center gap-2 text-[11px] text-slate-400">
-                <i class="fa-solid fa-shield-halved text-emerald-500"></i>
-                <span>Mobil & Masaüstü tam uyumlu kişisel takip</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===================================================================== -->
-    <!-- 2. DİYETE BAŞLANGIÇ KURULUM SİHİRBAZI (ONBOARDING - ZORUNLU)          -->
-    <!-- ===================================================================== -->
-    <div id="onboarding-view" class="hidden flex-1 flex items-center justify-center p-3 sm:p-4">
-        <div class="glass-card rounded-[2rem] max-w-xl w-full p-5 sm:p-9 shadow-2xl border border-emerald-100 my-2">
-            <div class="flex items-center justify-between mb-5">
-                <div class="flex items-center gap-3">
-                    <div class="w-11 h-11 rounded-2xl coral-gradient text-white flex items-center justify-center shadow-md shadow-orange-200 flex-shrink-0">
-                        <i class="fa-solid fa-rocket text-base"></i>
-                    </div>
-                    <div>
-                        <span class="text-[11px] font-bold uppercase tracking-wider text-orange-600">Adım 1 / 1 • Kişisel Kurulum</span>
-                        <h2 class="text-lg sm:text-xl font-extrabold text-slate-800">Diyet Yolculuğunu Başlat</h2>
-                    </div>
-                </div>
-                <button onclick="handleLogout()" class="touch-target px-3 text-xs text-slate-400 hover:text-rose-600 font-semibold">Çıkış</button>
-            </div>
-
-            <p class="text-xs sm:text-sm text-slate-600 mb-5 bg-emerald-50/70 border border-emerald-100 p-3.5 rounded-2xl">
-                Hoş geldin <strong id="ob-welcome-name" class="text-emerald-800">Kullanıcı</strong>! Eski hiçbir kayıt olmadan sıfırdan başlıyoruz. Bilgilerini gir; sistem haftalık <strong>resmi tartı günlerini</strong> ve <strong>kalori hedefini</strong> otomatik planlasın.
-            </p>
-
-            <form onsubmit="completeOnboarding(event)" class="space-y-4">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                    <div class="p-3.5 rounded-2xl bg-sky-50/70 border border-sky-100">
-                        <label class="block text-xs font-bold text-sky-900 mb-1.5">
-                            <i class="fa-regular fa-calendar-check mr-1"></i>Diyete Başlangıç Tarihi
-                        </label>
-                        <input type="date" id="ob-start-date" required onchange="previewWeighInSchedule()"
-                            class="touch-target w-full px-3.5 py-2.5 rounded-xl bg-white border border-sky-200 text-base sm:text-sm font-semibold text-slate-800 focus:outline-none focus:border-sky-500">
-                        <p id="ob-weigh-preview" class="text-[11px] text-sky-700 mt-1.5 font-medium"></p>
-                    </div>
-
-                    <div class="p-3.5 rounded-2xl bg-orange-50/70 border border-orange-100">
-                        <label class="block text-xs font-bold text-orange-900 mb-1.5">
-                            <i class="fa-solid fa-venus-mars mr-1"></i>Cinsiyet
-                        </label>
-                        <select id="ob-gender" onchange="recalcOnboardingCalories()" class="touch-target w-full px-3.5 py-2.5 rounded-xl bg-white border border-orange-200 text-base sm:text-sm font-semibold text-slate-800 focus:outline-none focus:border-orange-500">
-                            <option value="male">Erkek</option>
-                            <option value="female">Kadın</option>
-                        </select>
-                        <p class="text-[11px] text-orange-700 mt-1.5">Metabolizma hesabında kullanılır.</p>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Mevcut Kilo (kg)</label>
-                        <input type="number" step="0.01" min="35" max="300" id="ob-current-weight" required placeholder="88.50" oninput="recalcOnboardingCalories()"
-                            class="touch-target w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-base sm:text-sm font-semibold focus:outline-none focus:border-emerald-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-emerald-700 mb-1">Hedef Kilo (kg)</label>
-                        <input type="number" step="0.1" min="35" max="250" id="ob-target-weight" required placeholder="74.0"
-                            class="touch-target w-full px-3.5 py-2.5 rounded-xl bg-emerald-50/40 border border-emerald-200 text-base sm:text-sm font-bold text-emerald-900 focus:outline-none focus:border-emerald-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Boy (cm)</label>
-                        <input type="number" min="120" max="230" id="ob-height" required placeholder="175" oninput="recalcOnboardingCalories()"
-                            class="touch-target w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-base sm:text-sm font-semibold focus:outline-none focus:border-emerald-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Yaş</label>
-                        <input type="number" min="15" max="99" id="ob-age" required placeholder="32" oninput="recalcOnboardingCalories()"
-                            class="touch-target w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-base sm:text-sm font-semibold focus:outline-none focus:border-emerald-500">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                    <div class="p-3.5 rounded-2xl bg-emerald-50/70 border border-emerald-200">
-                        <div class="flex justify-between items-center mb-1">
-                            <label class="text-xs font-bold text-emerald-900">Günlük Kalori (kcal)</label>
-                            <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-600 text-white">Otomatik</span>
-                        </div>
-                        <input type="number" min="1000" max="4500" id="ob-calorie-goal" required value="1700"
-                            class="touch-target w-full px-3.5 py-2 rounded-xl bg-white border border-emerald-200 text-base font-extrabold text-emerald-800 focus:outline-none focus:border-emerald-500">
-                    </div>
-
-                    <div class="p-3.5 rounded-2xl bg-sky-50/70 border border-sky-200">
-                        <div class="flex justify-between items-center mb-1">
-                            <label class="text-xs font-bold text-sky-900">Günlük Su Hedefi (L)</label>
-                            <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-sky-600 text-white">Kilo Bazlı</span>
-                        </div>
-                        <input type="number" step="0.1" min="1.5" max="6.0" id="ob-water-goal" required value="3.0"
-                            class="touch-target w-full px-3.5 py-2 rounded-xl bg-white border border-sky-200 text-base font-extrabold text-sky-800 focus:outline-none focus:border-sky-500">
-                    </div>
-                </div>
-
-                <button type="submit" class="touch-target w-full py-3.5 rounded-2xl vibrant-gradient hover:opacity-95 text-white font-bold text-sm shadow-lg shadow-emerald-200 transition flex items-center justify-center gap-2 mt-2">
-                    <span>Programımı Oluştur ve Panele Geç</span>
-                    <i class="fa-solid fa-arrow-right"></i>
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <!-- ===================================================================== -->
-    <!-- 3. PROFİL & HEDEF GÜNCELLEME MODALI (MOBİL UYUMLU KAYDIRILABİLİR)     -->
-    <!-- ===================================================================== -->
-    <div id="settings-modal" class="fixed inset-0 bg-slate-900/45 backdrop-blur-sm z-50 hidden items-center justify-center p-3 sm:p-4 overflow-y-auto">
-        <div class="glass-card bg-white rounded-3xl max-w-md w-full p-5 sm:p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-base font-extrabold text-slate-800 flex items-center gap-2">
-                    <i class="fa-solid fa-sliders text-emerald-600"></i> Hedef & Otomasyon Ayarları
-                </h3>
-                <button onclick="closeSettingsModal()" class="touch-target w-10 h-10 rounded-full hover:bg-slate-100 text-slate-400 flex items-center justify-center">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-            <form onsubmit="saveSettingsModal(event)" class="space-y-3.5 text-sm">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Adınız</label>
-                    <input type="text" id="set-name" required class="touch-target w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-base sm:text-sm">
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Diyete Başlangıç Tarihi</label>
-                        <input type="date" id="set-start-date" required class="touch-target w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-base sm:text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-emerald-700 mb-1">Hedef Kilo (kg)</label>
-                        <input type="number" step="0.1" id="set-target-weight" required class="touch-target w-full px-3.5 py-2.5 rounded-xl border border-emerald-200 bg-emerald-50/40 font-bold text-base sm:text-sm">
-                    </div>
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Günlük Kalori (kcal)</label>
-                        <input type="number" id="set-cal-goal" required class="touch-target w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-base sm:text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Su Hedefi (L)</label>
-                        <input type="number" step="0.1" id="set-water-goal" required class="touch-target w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-base sm:text-sm">
-                    </div>
-                </div>
-                <div class="p-3 rounded-2xl bg-sky-50 border border-sky-100">
-                    <label class="block text-xs font-bold text-sky-900 mb-1">
-                        <i class="fa-regular fa-envelope mr-1"></i>Su Hatırlatma Mail Süresi
-                    </label>
-                    <select id="set-water-interval" class="touch-target w-full px-3 py-2 rounded-xl bg-white border border-sky-200 text-xs font-semibold">
-                        <option value="60">Her 1 saatte bir su girilmezse mail uyarısı</option>
-                        <option value="120" selected>Her 2 saatte bir su girilmezse mail uyarısı</option>
-                        <option value="180">Her 3 saatte bir su girilmezse mail uyarısı</option>
-                    </select>
-                </div>
-                <div class="flex justify-end gap-2 pt-2">
-                    <button type="button" onclick="closeSettingsModal()" class="touch-target px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-500 hover:bg-slate-100">İptal</button>
-                    <button type="submit" class="touch-target px-5 py-2.5 rounded-xl text-xs font-bold emerald-sky-gradient text-white shadow-sm">Kaydet</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- ===================================================================== -->
-    <!-- 4. E-POSTA BİLDİRİM ÖNİZLEME & GÖNDERİM MODALI                        -->
-    <!-- ===================================================================== -->
-    <div id="email-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden items-center justify-center p-3 sm:p-4 overflow-y-auto">
-        <div class="glass-card bg-white rounded-3xl max-w-lg w-full p-5 sm:p-6 shadow-2xl border border-sky-100 max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center mb-4">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-10 h-10 rounded-2xl bg-sky-100 text-sky-600 flex items-center justify-center flex-shrink-0">
-                        <i class="fa-solid fa-envelope-open-text text-lg"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-sm font-extrabold text-slate-800">Su Hatırlatma E-Postası</h3>
-                        <p class="text-[11px] text-slate-500">Kayıtlı adresinize oluşturulan bildirim</p>
-                    </div>
-                </div>
-                <button onclick="closeEmailModal()" class="touch-target w-10 h-10 rounded-full hover:bg-slate-100 text-slate-400 flex items-center justify-center">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-
-            <div class="rounded-2xl border border-slate-200 bg-slate-50/80 p-3.5 sm:p-4 space-y-2.5 text-xs">
-                <div class="flex flex-col sm:flex-row sm:justify-between border-b border-slate-200/70 pb-2 gap-1">
-                    <span class="text-slate-400 font-medium">Alıcı:</span>
-                    <span id="modal-mail-to" class="font-bold text-slate-800 break-all">kullanici@mail.com</span>
-                </div>
-                <div class="flex flex-col sm:flex-row sm:justify-between border-b border-slate-200/70 pb-2 gap-1">
-                    <span class="text-slate-400 font-medium">Konu:</span>
-                    <span id="modal-mail-subject" class="font-bold text-sky-700">💧 Su İçme Vakti!</span>
-                </div>
-                <div id="modal-mail-body" class="text-slate-700 leading-relaxed pt-1 whitespace-pre-line"></div>
-            </div>
-
-            <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-2 mt-4">
-                <button onclick="copyEmailBody()" class="touch-target px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition flex items-center justify-center gap-1.5">
-                    <i class="fa-regular fa-copy"></i> İçeriği Kopyala
-                </button>
-                <a id="modal-mailto-link" href="#" class="touch-target px-4 py-2.5 rounded-xl emerald-sky-gradient text-white text-xs font-bold shadow-sm flex items-center justify-center gap-1.5">
-                    <i class="fa-solid fa-paper-plane"></i> Mail Uygulamasında Aç
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===================================================================== -->
-    <!-- 5. ANA PORTAL EKRANI (DASHBOARD VIEW)                                 -->
-    <!-- ===================================================================== -->
-    <div id="dashboard-view" class="hidden flex-1 flex flex-col justify-between pb-16">
-
-        <!-- Canlı Üst Navigasyon + Masaüstü / Mobil Görünüm Seçici -->
-        <header class="sticky top-0 z-30 glass-card border-b border-white/80">
-            <div class="max-w-6xl mx-auto px-3 sm:px-4 py-2.5 flex items-center justify-between gap-2">
-                <div class="flex items-center gap-2.5 min-w-0">
-                    <div class="w-10 h-10 rounded-2xl vibrant-gradient text-white flex items-center justify-center shadow-md shadow-emerald-200/60 flex-shrink-0">
-                        <i class="fa-solid fa-fire-flame-curved text-base"></i>
-                    </div>
-                    <div class="min-w-0">
-                        <div class="flex items-center gap-1.5">
-                            <span class="brand-font font-extrabold text-slate-800 text-sm sm:text-lg tracking-tight truncate">Arda ile Fit Kal</span>
-                            <span id="header-day-badge" class="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 flex-shrink-0">1. Gün</span>
-                        </div>
-                        <p id="header-user-info" class="text-[11px] text-slate-500 truncate max-w-[140px] sm:max-w-xs">kullanici@mail.com</p>
-                    </div>
-                </div>
-
-                <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
-                    <!-- MASAÜSTÜ / MOBİL GÖRÜNÜM SEÇİCİ PILL -->
-                    <div class="inline-flex items-center p-1 rounded-xl bg-slate-100/95 border border-slate-200/80" role="group" aria-label="Görünüm Seçici">
-                        <button type="button" id="view-btn-desktop" onclick="setViewportMode('desktop')" title="Masaüstü Görünümü"
-                            class="px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold bg-white text-emerald-700 shadow-2xs transition flex items-center gap-1">
-                            <i class="fa-solid fa-desktop"></i>
-                            <span class="hidden md:inline hide-in-mobile-mode">Masaüstü</span>
-                        </button>
-                        <button type="button" id="view-btn-mobile" onclick="setViewportMode('mobile')" title="Mobil Görünüm"
-                            class="px-2.5 py-1.5 rounded-lg text-[11px] font-bold text-slate-500 hover:text-slate-800 transition flex items-center gap-1">
-                            <i class="fa-solid fa-mobile-screen-button"></i>
-                            <span class="hidden md:inline hide-in-mobile-mode">Mobil</span>
-                        </button>
-                    </div>
-
-                    <button onclick="openSettingsModal()" aria-label="Hedef ve Ayarlar" class="touch-target px-3 py-2 rounded-xl bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 text-xs font-bold transition flex items-center gap-1.5 border border-slate-200/80 shadow-2xs">
-                        <i class="fa-solid fa-sliders text-emerald-600"></i>
-                        <span class="hidden sm:inline hide-in-mobile-mode">Ayarlar</span>
-                    </button>
-                    <button onclick="handleLogout()" aria-label="Çıkış Yap" class="touch-target px-3 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-bold transition flex items-center gap-1.5">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                        <span class="hidden sm:inline hide-in-mobile-mode">Çıkış</span>
-                    </button>
-                </div>
-            </div>
-        </header>
-
-        <main class="max-w-6xl w-full mx-auto px-3 sm:px-4 pt-4 sm:pt-6 space-y-5 sm:space-y-6">
-
-            <!-- BÖLÜM 1: SICAK ÖĞÜN HATIRLATMA KARTI (SAATE GÖRE DİNAMİK) -->
-            <section id="warm-meal-banner" class="rounded-3xl p-4 sm:p-6 text-white shadow-xl shadow-orange-200/50 coral-gradient relative overflow-hidden">
-                <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-3.5">
-                    <div class="space-y-1">
-                        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-xs text-[11px] font-bold">
-                            <i id="warm-banner-icon" class="fa-solid fa-sun"></i>
-                            <span id="warm-banner-tag">Sıcak Öğün Hatırlatması</span>
-                        </div>
-                        <h2 id="warm-banner-title" class="text-base sm:text-xl font-extrabold tracking-tight">Merhaba! Bugün neler yedin?</h2>
-                        <p id="warm-banner-desc" class="text-xs sm:text-sm text-white/90 max-w-2xl leading-relaxed">
-                            Öğünlerini düzenli kaydetmek metabolizmanı canlı tutar ve kalori açığını zahmetsizce korumanı sağlar.
-                        </p>
-                    </div>
-                    <button onclick="focusMealInput()" class="touch-target w-full sm:w-auto px-5 py-3 rounded-2xl bg-white text-orange-600 hover:bg-orange-50 font-extrabold text-xs sm:text-sm shadow-md transition flex items-center justify-center gap-2 whitespace-nowrap">
-                        <i class="fa-solid fa-utensils"></i>
-                        <span id="warm-banner-cta">Öğünümü Kaydet</span>
-                    </button>
-                </div>
-                <i class="fa-solid fa-bowl-rice absolute -right-4 -bottom-6 text-8xl text-white/10 pointer-events-none"></i>
-            </section>
-
-            <!-- BÖLÜM 2: 3 CANLI ANA KART (KALORİ • HEDEF KİLO • SU & E-POSTA OTOMASYONU) -->
-            <section id="sec-summary" class="desktop-grid-3 grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">
-
-                <!-- Kart 1: Kalori Bütçesi -->
-                <div class="glass-card rounded-3xl p-5 sm:p-6 flex flex-col justify-between">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <span class="text-[11px] font-extrabold uppercase tracking-wider text-emerald-600">Günlük Kalori Bütçesi</span>
-                            <div class="mt-1.5 flex items-baseline gap-1.5">
-                                <span id="cal-remaining" class="text-3xl sm:text-4xl font-extrabold text-slate-800">0</span>
-                                <span class="text-xs font-semibold text-slate-400">kcal kaldı</span>
-                            </div>
-                        </div>
-                        <div class="relative w-20 h-20 flex items-center justify-center flex-shrink-0">
-                            <svg class="w-20 h-20" viewBox="0 0 80 80">
-                                <circle cx="40" cy="40" r="32" fill="none" stroke="#e2e8f0" stroke-width="8"></circle>
-                                <circle id="cal-ring" class="circle-progress" cx="40" cy="40" r="32" fill="none" stroke="#10b981" stroke-width="8" stroke-linecap="round" stroke-dasharray="201" stroke-dashoffset="201"></circle>
-                            </svg>
-                            <span id="cal-pct" class="absolute text-xs font-extrabold text-slate-700">%0</span>
-                        </div>
-                    </div>
-
-                    <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-                        <span class="text-slate-500">Alınan: <strong id="cal-eaten" class="text-slate-800">0 kcal</strong></span>
-                        <span class="text-slate-500">Hedef: <strong id="cal-goal" class="text-emerald-700">1700 kcal</strong></span>
-                    </div>
-                </div>
-
-                <!-- Kart 2: Kilo & Hedef İlerlemesi -->
-                <div class="glass-card rounded-3xl p-5 sm:p-6 flex flex-col justify-between">
-                    <div>
-                        <div class="flex justify-between items-start gap-2">
-                            <span class="text-[11px] font-extrabold uppercase tracking-wider text-orange-600">Kilo & Hedef Takibi</span>
-                            <span id="bmi-badge" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-orange-50 text-orange-700">VKİ: --</span>
-                        </div>
-                        <div class="mt-1.5 flex flex-wrap items-baseline gap-1.5">
-                            <span id="dash-curr-weight" class="text-3xl font-extrabold text-slate-800">--</span>
-                            <span class="text-xs font-semibold text-slate-400">kg</span>
-                            <span class="text-xs text-slate-400 mx-0.5">→</span>
-                            <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-lg">Hedef: <span id="dash-target-weight">--</span> kg</span>
-                        </div>
-                    </div>
-
-                    <div class="mt-4">
-                        <div class="flex justify-between text-[11px] font-bold mb-1.5">
-                            <span id="dash-lost-weight" class="text-emerald-600">Değişim: 0.00 kg</span>
-                            <span id="dash-left-weight" class="text-slate-500">Kalan: -- kg</span>
-                        </div>
-                        <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden p-0.5">
-                            <div id="dash-weight-bar" class="coral-gradient h-2 rounded-full transition-all duration-700" style="width: 5%"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Kart 3: Canlı Su Takibi & Otomatik Mail Hatırlatıcı -->
-                <div id="sec-water" class="glass-card rounded-3xl p-5 sm:p-6 flex flex-col justify-between border border-sky-100">
-                    <div class="flex items-center justify-between gap-3">
-                        <div>
-                            <span class="text-[11px] font-extrabold uppercase tracking-wider text-sky-600">Su & Otomatik Mail</span>
-                            <div class="mt-1 flex items-baseline gap-1.5">
-                                <span id="dash-water-liters" class="text-3xl font-extrabold text-slate-800">0.00</span>
-                                <span class="text-xs font-semibold text-slate-400">/ <span id="dash-water-goal">3.0</span> L</span>
-                            </div>
-                            <p id="water-timer-status" class="text-[11px] text-sky-700 font-semibold mt-1 flex items-center gap-1">
-                                <i class="fa-regular fa-clock"></i> <span>Kontrol aktif</span>
-                            </p>
-                        </div>
-
-                        <!-- Animasyonlu Su Tankı -->
-                        <div class="water-tank w-16 h-20 rounded-2xl border-2 border-sky-200 flex items-center justify-center flex-shrink-0 shadow-inner">
-                            <div id="water-tank-fill" class="water-fill" style="height: 5%">
-                                <div class="water-wave"></div>
-                            </div>
-                            <span id="water-pct-text" class="relative z-10 text-xs font-extrabold text-slate-800 drop-shadow-xs">%0</span>
-                        </div>
-                    </div>
-
-                    <!-- Su Ekleme Butonları (44px+ dokunmatik) -->
-                    <div class="grid grid-cols-3 gap-2 mt-4">
-                        <button onclick="addWaterAmount(250)" class="touch-target py-2.5 px-2 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-700 font-bold text-xs transition border border-sky-200/70">
-                            +250 ml
-                        </button>
-                        <button onclick="addWaterAmount(500)" class="touch-target py-2.5 px-2 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs transition shadow-xs">
-                            +500 ml
-                        </button>
-                        <button onclick="addWaterAmount(1000)" class="touch-target py-2.5 px-2 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-700 font-bold text-xs transition border border-sky-200/70">
-                            +1 Litre
-                        </button>
-                    </div>
-                </div>
-
-            </section>
-
-            <!-- BÖLÜM 3: ARDA AI DİYETİSYEN ASİSTANI -->
-            <section id="sec-meals" class="glass-card rounded-3xl p-4 sm:p-6 border border-emerald-100">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-3.5">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-2xl emerald-sky-gradient text-white flex items-center justify-center shadow-sm flex-shrink-0">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i>
-                        </div>
-                        <div>
-                            <h2 class="text-sm sm:text-base font-extrabold text-slate-800">Arda AI Diyetisyen</h2>
-                            <p class="text-xs text-slate-500">Yediğini yaz; kalorisini ve makrolarını hesaplayıp ekleyeyim</p>
-                        </div>
-                    </div>
-                    <button onclick="askAIAdvice()" id="btn-ai-advice" class="touch-target w-full sm:w-auto px-4 py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-bold transition flex items-center justify-center gap-1.5 border border-emerald-200/60">
-                        <i class="fa-solid fa-lightbulb text-amber-500"></i> Ne Yemeliyim?
-                    </button>
-                </div>
-
-                <div class="flex flex-col sm:flex-row gap-2.5">
-                    <input type="text" id="meal-ai-input" placeholder="Örn: Sabah 2 haşlanmış yumurta, 1 dilim tam buğday ekmeği..."
-                        onkeypress="if(event.key==='Enter') submitAIMeal()"
-                        class="touch-target flex-1 px-4 py-3 rounded-2xl bg-white border border-slate-200 text-base sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition">
-                    <button onclick="submitAIMeal()" id="btn-meal-submit" class="touch-target px-6 py-3 rounded-2xl emerald-sky-gradient hover:opacity-95 text-white font-bold text-sm shadow-md shadow-emerald-200 transition flex items-center justify-center gap-2 whitespace-nowrap">
-                        <i class="fa-solid fa-plus"></i> Hesapla & Ekle
-                    </button>
-                </div>
-
-                <!-- Hızlı 0 Kalori Bitki Çayı / Kahve Çubuğu -->
-                <div class="flex flex-wrap items-center gap-2 mt-3.5 pt-3 border-t border-slate-100">
-                    <span class="text-[11px] font-bold text-slate-400 w-full sm:w-auto"><i class="fa-solid fa-mug-hot text-amber-500 mr-1"></i>0 Kalori İçecek Ekle:</span>
-                    <button onclick="addZeroCalDrink('Portakal Çiçekli Beyaz Çay')" class="touch-target text-xs font-semibold px-3.5 py-2 rounded-full bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200/60 transition">
-                        + Beyaz Çay (<span id="drink-white-tea">0</span>)
-                    </button>
-                    <button onclick="addZeroCalDrink('Yeşil Çay')" class="touch-target text-xs font-semibold px-3.5 py-2 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200/60 transition">
-                        + Yeşil Çay (<span id="drink-green-tea">0</span>)
-                    </button>
-                    <button onclick="addZeroCalDrink('Şekersiz Sade Kahve')" class="touch-target text-xs font-semibold px-3.5 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
-                        + Sade Kahve (<span id="drink-coffee">0</span>)
-                    </button>
-                </div>
-
-                <!-- AI Yükleniyor -->
-                <div id="ai-loading-box" class="hidden mt-3.5 p-3.5 rounded-2xl bg-sky-50/80 border border-sky-100 flex items-center gap-3 text-xs font-semibold text-sky-800">
-                    <div class="flex gap-1">
-                        <span class="w-2 h-2 rounded-full bg-sky-600 pulse-dot"></span>
-                        <span class="w-2 h-2 rounded-full bg-sky-600 pulse-dot"></span>
-                        <span class="w-2 h-2 rounded-full bg-sky-600 pulse-dot"></span>
-                    </div>
-                    <span>Besin değerleri analiz ediliyor...</span>
-                </div>
-
-                <!-- AI Yorum Kartı -->
-                <div id="ai-response-box" class="hidden mt-3.5 p-4 rounded-2xl bg-gradient-to-r from-emerald-50 to-sky-50 border border-emerald-200/70 text-xs sm:text-sm text-slate-700 leading-relaxed"></div>
-            </section>
-
-            <!-- BÖLÜM 4: ALT 3'LÜ MODÜL (ÖĞÜNLER • OTOMATİK TARTI GÜNLERİ • E-POSTA BİLDİRİM MERKEZİ) -->
-            <section class="desktop-grid-12 grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6">
-
-                <!-- 1. Bugünün Öğün Listesi (5 Sütun) -->
-                <div class="desktop-col-span lg:col-span-5 glass-card rounded-3xl p-4 sm:p-6 flex flex-col">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-sm font-extrabold text-slate-800 flex items-center gap-2">
-                            <i class="fa-solid fa-plate-wheat text-emerald-600"></i> Bugünün Öğünleri
-                        </h3>
-                        <span id="today-meal-count" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">0 öğün</span>
-                    </div>
-                    <div id="meal-list-container" class="space-y-2.5 flex-1">
-                        <!-- Dinamik dolacak -->
-                    </div>
-                </div>
-
-                <!-- 2. Sistem Tarafından Belirlenen Otomatik Tartı Takvimi (4 Sütun) -->
-                <div id="sec-weigh" class="desktop-col-span lg:col-span-4 glass-card rounded-3xl p-4 sm:p-6 flex flex-col justify-between border border-orange-100">
-                    <div>
-                        <div class="flex items-center justify-between mb-3 gap-2">
-                            <h3 class="text-sm font-extrabold text-slate-800 flex items-center gap-2">
-                                <i class="fa-solid fa-calendar-days text-orange-500"></i> Otomatik Tartı Günlerin
-                            </h3>
-                            <span id="next-weigh-countdown" class="text-[11px] font-extrabold px-2.5 py-1 rounded-full bg-orange-100 text-orange-700">--</span>
-                        </div>
-
-                        <p class="text-[11px] text-slate-500 mb-3">
-                            Başlangıç tarihine (<strong id="weigh-start-ref">--</strong>) göre sistemin senin için belirlediği haftalık resmi tartı takvimi:
-                        </p>
-
-                        <!-- Otomatik Tartı Zaman Çizelgesi -->
-                        <div id="weigh-schedule-list" class="space-y-2 mb-4 max-h-48 overflow-y-auto pr-1">
-                            <!-- Dinamik dolacak -->
-                        </div>
-                    </div>
-
-                    <!-- Yeni Kilo Girişi -->
-                    <div class="pt-3 border-t border-slate-100">
-                        <label class="block text-[11px] font-bold text-slate-600 mb-1.5">Sabah Aç Karnına Tartı Kaydı Gir (kg):</label>
-                        <div class="flex gap-2">
-                            <input type="number" step="0.01" id="new-weight-input" placeholder="Örn: 87.40"
-                                class="touch-target flex-1 px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-base sm:text-sm font-semibold focus:outline-none focus:border-orange-500">
-                            <button onclick="recordWeightEntry()" class="touch-target px-4 py-2.5 rounded-xl coral-gradient text-white text-xs font-bold shadow-xs hover:opacity-95 transition">
-                                Kaydet
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 3. Su Hatırlatma E-Posta Otomasyon Logları (3 Sütun) -->
-                <div class="desktop-col-span lg:col-span-3 glass-card rounded-3xl p-4 sm:p-6 flex flex-col justify-between border border-sky-100">
-                    <div>
-                        <div class="flex items-center justify-between mb-3">
-                            <h3 class="text-sm font-extrabold text-slate-800 flex items-center gap-2">
-                                <i class="fa-solid fa-envelope-circle-check text-sky-600"></i> Mail Bildirimleri
-                            </h3>
-                        </div>
-
-                        <div class="p-3 rounded-2xl bg-sky-50/80 border border-sky-100 text-[11px] text-sky-900 space-y-1 mb-3">
-                            <p class="font-bold flex items-center gap-1.5">
-                                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-                                Otomatik Kural Aktif
-                            </p>
-                            <p class="text-sky-700 leading-relaxed">
-                                <strong id="rule-interval-label">2 saat</strong> boyunca su girişi olmazsa <strong id="rule-email-target" class="underline break-all">mailinize</strong> hatırlatma oluşturulur.
-                            </p>
-                        </div>
-
-                        <div id="email-logs-list" class="space-y-2 max-h-40 overflow-y-auto pr-1">
-                            <!-- Gönderilen mailler buraya düşer -->
-                        </div>
-                    </div>
-
-                    <button onclick="triggerWaterReminderEmail(true)" class="touch-target mt-4 w-full py-2.5 px-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs">
-                        <i class="fa-solid fa-paper-plane"></i> Mail Hatırlatması Oluştur
-                    </button>
-                </div>
-
-            </section>
-
-        </main>
-
-        <!-- MOBİL ALT GEZİNTİ ÇUBUĞU (MOBİL EKRANLARDA VE MOBİL ÖNİZLEME MODUNDA AKTİF) -->
-        <nav id="mobile-bottom-nav" class="hidden fixed bottom-0 left-0 right-0 z-40 glass-card border-t border-slate-200/80 px-2 py-1.5 justify-around items-center shadow-2xl">
-            <button type="button" onclick="scrollToSection('sec-summary')" class="touch-target flex-1 flex flex-col items-center justify-center text-emerald-700 font-bold text-[10px] gap-0.5">
-                <i class="fa-solid fa-chart-pie text-base"></i>
-                <span>Özet</span>
-            </button>
-            <button type="button" onclick="focusMealInput()" class="touch-target flex-1 flex flex-col items-center justify-center text-slate-600 hover:text-emerald-700 font-bold text-[10px] gap-0.5">
-                <i class="fa-solid fa-utensils text-base"></i>
-                <span>Öğün Ekle</span>
-            </button>
-            <button type="button" onclick="scrollToSection('sec-water')" class="touch-target flex-1 flex flex-col items-center justify-center text-slate-600 hover:text-sky-600 font-bold text-[10px] gap-0.5">
-                <i class="fa-solid fa-droplet text-base"></i>
-                <span>Su & Çay</span>
-            </button>
-            <button type="button" onclick="scrollToSection('sec-weigh')" class="touch-target flex-1 flex flex-col items-center justify-center text-slate-600 hover:text-orange-600 font-bold text-[10px] gap-0.5">
-                <i class="fa-solid fa-weight-scale text-base"></i>
-                <span>Tartı</span>
-            </button>
-        </nav>
-
-    </div>
-    </div> <!-- /#app-shell -->
-
-    <!-- JavaScript & Hibrit Veri Katmanı -->
-    <script type="module">
-// ... existing code ... -->
-        // Yerel Çok Kullanıcılı Veritabanı Anahtarları (Tamamen Temiz Yeni Sürüm)
-        const USERS_REGISTRY_KEY = 'arda_fit_users_v3';
-        const CURRENT_SESSION_KEY = 'arda_fit_active_user_v3';
-        const VIEWPORT_MODE_KEY = 'arda_fit_viewport_mode_v1';
-
-        let currentUser = null; // { uid, email, name }
-// ... existing code ... -->
-        window.focusMealInput = function() {
-            const inp = document.getElementById('meal-ai-input');
-            inp.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            inp.focus();
-        };
-
-        window.scrollToSection = function(sectionId) {
-            const el = document.getElementById(sectionId);
-            if (el) {
-                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        };
-
-        // --- MASAÜSTÜ / MOBİL GÖRÜNÜM SEÇİCİ ---
-        window.setViewportMode = function(mode, silent = false) {
-            const body = document.body;
-            const btnDesktop = document.getElementById('view-btn-desktop');
-            const btnMobile = document.getElementById('view-btn-mobile');
-
-            if (mode === 'mobile') {
-                body.classList.add('mobile-preview-mode');
-                if (btnMobile && btnDesktop) {
-                    btnMobile.className = 'px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold bg-white text-emerald-700 shadow-2xs transition flex items-center gap-1';
-                    btnDesktop.className = 'px-2.5 py-1.5 rounded-lg text-[11px] font-bold text-slate-500 hover:text-slate-800 transition flex items-center gap-1';
-                }
-                if (!silent) showToast('Mobil görünüm moduna geçildi 📱', 'info');
-            } else {
-                body.classList.remove('mobile-preview-mode');
-                if (btnMobile && btnDesktop) {
-                    btnDesktop.className = 'px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold bg-white text-emerald-700 shadow-2xs transition flex items-center gap-1';
-                    btnMobile.className = 'px-2.5 py-1.5 rounded-lg text-[11px] font-bold text-slate-500 hover:text-slate-800 transition flex items-center gap-1';
-                }
-                if (!silent) showToast('Masaüstü tam ekran görünümüne geçildi 🖥️', 'info');
-            }
-            localStorage.setItem(VIEWPORT_MODE_KEY, mode);
-        };
-
-        // --- 5. OTOMATİK HAFTALIK TARTI GÜNLERİ PLANLAYICISI ---
-// ... existing code ... -->
-        // --- SAYFA YÜKLENİNCE OTURUM VE GÖRÜNÜM KONTROLÜ ---
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedViewMode = localStorage.getItem(VIEWPORT_MODE_KEY);
-            if (savedViewMode === 'mobile' && window.innerWidth >= 768) {
-                setViewportMode('mobile', true);
-            } else {
-                setViewportMode('desktop', true);
-            }
-
-            setTimeout(() => {
-                const savedSession = localStorage.getItem(CURRENT_SESSION_KEY);
-                if (savedSession) {
-                    try {
-                        routeAuthenticatedUser(JSON.parse(savedSession));
-                        return;
-                    } catch {}
-                }
-                document.getElementById('global-loader').classList.add('hidden');
-                document.getElementById('auth-view').classList.remove('hidden');
-            }, 350);
-        });
-    </script>
-</body>
-</html>
+```
