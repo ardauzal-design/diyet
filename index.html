@@ -29,7 +29,740 @@
             box-shadow: 0 12px 32px -10px rgba(15, 23, 42, 0.06), 0 4px 12px -2px rgba(16, 185, 129, 0.05);
         }
         .vibrant-gradient {
-            background: linear-gradient(135deg, #059669 0%, #0284c7 55%, #f97316 100%);
+           <!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Arda ile Fit Kal | Kişisel Diyet & Kalori Portalı</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f0fdf4; color: #0f172a; }
+    .glass-card { background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.8); }
+    .mobile-shell { max-width: 410px; margin: 16px auto; border: 10px solid #0f172a; border-radius: 36px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); overflow: hidden; background: #f8fafc; min-height: 820px; position: relative; }
+    input, select { font-size: 16px !important; }
+    @keyframes pulseSoft { 0%, 100% { opacity: 1; } 50% { opacity: 0.65; } }
+    .animate-pulse-soft { animation: pulseSoft 2s infinite; }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-100">
+
+  <!-- ÜST GÖRÜNÜM SEÇİCİ BAR -->
+  <div class="bg-slate-900 text-white px-4 py-2.5 flex items-center justify-between text-xs sticky top-0 z-50">
+    <div class="flex items-center gap-2 font-bold">
+      <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+      <span>Arda ile Fit Kal</span>
+    </div>
+    <div class="flex items-center gap-2 bg-slate-800 p-1 rounded-xl">
+      <button type="button" id="btnDesktopView" onclick="setViewMode('desktop')" class="px-3 py-1 rounded-lg font-semibold bg-emerald-500 text-white transition">Masaüstü</button>
+      <button type="button" id="btnMobileView" onclick="setViewMode('mobile')" class="px-3 py-1 rounded-lg font-semibold text-slate-300 hover:text-white transition">Mobil Görünüm</button>
+    </div>
+  </div>
+
+  <!-- ANA KAPSAYICI -->
+  <div id="appWrapper" class="transition-all duration-300">
+
+    <!-- 1. GİRİŞ / KAYIT EKRANI -->
+    <div id="authScreen" class="min-h-[85vh] flex items-center justify-center p-4">
+      <div class="glass-card w-full max-w-md rounded-3xl p-7 shadow-xl">
+        <div class="text-center mb-6">
+          <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-white text-3xl font-extrabold shadow-lg mb-3">A</div>
+          <h1 class="text-2xl font-extrabold text-slate-900">Arda ile Fit Kal</h1>
+          <p class="text-sm text-slate-500 mt-1">Kişisel kalori, su ve tartı takip asistanın</p>
+        </div>
+
+        <!-- SEKMELER -->
+        <div class="grid grid-cols-2 gap-2 bg-slate-100 p-1.5 rounded-2xl mb-5">
+          <button type="button" id="tabLogin" onclick="switchAuthTab('login')" class="py-2.5 rounded-xl font-bold text-sm bg-white text-emerald-700 shadow-sm transition">Giriş Yap</button>
+          <button type="button" id="tabRegister" onclick="switchAuthTab('register')" class="py-2.5 rounded-xl font-bold text-sm text-slate-500 hover:text-slate-800 transition">Kayıt Ol</button>
+        </div>
+
+        <!-- HATA / BİLGİ MESAJI -->
+        <div id="authAlert" class="hidden mb-4 p-3 rounded-xl text-xs font-semibold"></div>
+
+        <!-- GİRİŞ FORMU -->
+        <div id="loginBox" class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">E-Posta Adresin</label>
+            <input type="email" id="loginEmail" placeholder="ornek@mail.com" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-emerald-500 focus:outline-none bg-white" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Şifren</label>
+            <input type="password" id="loginPassword" placeholder="••••••" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-emerald-500 focus:outline-none bg-white" />
+          </div>
+          <button type="button" onclick="handleLogin()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-700 hover:to-teal-600 text-white font-bold shadow-md transition active:scale-[0.99]">
+            Giriş Yap
+          </button>
+        </div>
+
+        <!-- KAYIT OL FORMU -->
+        <div id="registerBox" class="hidden space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Adın Soyadın</label>
+            <input type="text" id="regName" placeholder="Örn: Arda Yılmaz" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-emerald-500 focus:outline-none bg-white" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">E-Posta Adresin (Hatırlatmalar için)</label>
+            <input type="email" id="regEmail" placeholder="ornek@mail.com" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-emerald-500 focus:outline-none bg-white" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Şifre Oluştur (En az 4 karakter)</label>
+            <input type="password" id="regPassword" placeholder="••••••" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-emerald-500 focus:outline-none bg-white" />
+          </div>
+          <button type="button" id="btnRegisterSubmit" onclick="handleRegister()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-teal-600 to-emerald-500 hover:from-teal-700 hover:to-emerald-600 text-white font-bold shadow-md transition active:scale-[0.99]">
+            Hesap Oluştur ve Başla
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. DİYETE BAŞLANGIÇ KURULUM SİHİRBAZI -->
+    <div id="setupScreen" class="hidden min-h-[85vh] flex items-center justify-center p-4">
+      <div class="glass-card w-full max-w-lg rounded-3xl p-7 shadow-xl">
+        <div class="inline-block px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold mb-2">Adım 1 / 1 • Sıfırdan Temiz Başlangıç</div>
+        <h2 class="text-2xl font-extrabold text-slate-900">Diyet Profilini Oluşturalım</h2>
+        <p class="text-sm text-slate-500 mt-1 mb-5">Sana özel kalori bütçeni ve haftalık tartı günlerini otomatik ayarlayalım.</p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Diyete Başlangıç Tarihi</label>
+            <input type="date" id="setupStartDate" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Cinsiyet</label>
+            <select id="setupGender" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white">
+              <option value="male">Erkek</option>
+              <option value="female">Kadın</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Mevcut Kilon (kg)</label>
+            <input type="number" step="0.01" id="setupCurrentWeight" placeholder="Örn: 99.99" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Hedef Kilon (kg)</label>
+            <input type="number" step="0.1" id="setupTargetWeight" placeholder="Örn: 82.0" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Boyun (cm)</label>
+            <input type="number" id="setupHeight" placeholder="Örn: 170" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Yaşın</label>
+            <input type="number" id="setupAge" placeholder="Örn: 34" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white" />
+          </div>
+        </div>
+
+        <button type="button" onclick="saveInitialSetup()" class="w-full mt-6 py-3.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-bold shadow-lg hover:opacity-95 transition">
+          Planımı Oluştur ve Panele Geç
+        </button>
+      </div>
+    </div>
+
+    <!-- 3. ANA KULLANICI PANELİ -->
+    <div id="dashboardScreen" class="hidden max-w-5xl mx-auto p-4 pb-24">
+      
+      <!-- ÜST KULLANICI BAŞLIĞI -->
+      <div class="glass-card rounded-3xl p-5 mb-5 flex flex-wrap items-center justify-between gap-4 shadow-sm">
+        <div>
+          <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider" id="dashDateLabel">Bugün</span>
+          <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900">Merhaba, <span id="dashUserName">Kullanıcı</span> 👋</h1>
+          <p class="text-xs text-slate-500" id="dashUserEmail">mail@adres.com</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="openSetupEdit()" class="px-3.5 py-2 rounded-xl bg-emerald-50 text-emerald-700 font-bold text-xs hover:bg-emerald-100 transition">Hedef & Profil</button>
+          <button type="button" onclick="logoutUser()" class="px-3.5 py-2 rounded-xl bg-rose-50 text-rose-600 font-bold text-xs hover:bg-rose-100 transition">Çıkış</button>
+        </div>
+      </div>
+
+      <!-- SICAK ÖĞÜN HATIRLATMA KARTI -->
+      <div id="warmMealReminder" class="mb-5 rounded-3xl p-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <div class="text-2xl">🍲</div>
+          <div>
+            <div class="text-xs font-bold uppercase opacity-90" id="reminderSlotTitle">Öğün Hatırlatıcısı</div>
+            <div class="text-sm font-semibold" id="reminderSlotText">Vücudunu besleme zamanı! Bugünkü öğününü eklemeyi unutma.</div>
+          </div>
+        </div>
+        <button type="button" onclick="focusMealInput()" class="shrink-0 px-3.5 py-2 rounded-xl bg-white text-orange-600 font-extrabold text-xs shadow">Hemen Ekle</button>
+      </div>
+
+      <!-- ÖZET KARTLAR (3 SÜTUN) -->
+      <div id="secSummary" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+        <!-- Kalori Kartı -->
+        <div class="glass-card rounded-3xl p-5 shadow-sm">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-xs font-bold text-slate-500">GÜNLÜK KALORİ BÜTÇESİ</span>
+            <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold" id="calPercentBadge">%0</span>
+          </div>
+          <div class="text-3xl font-extrabold text-slate-900"><span id="calConsumed">0</span> <span class="text-sm font-semibold text-slate-400">/ <span id="calTarget">1750</span> kcal</span></div>
+          <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden my-3">
+            <div id="calProgressBar" class="h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full transition-all duration-500" style="width: 0%"></div>
+          </div>
+          <div class="text-xs font-semibold text-slate-600">Kalan Bütçe: <span class="text-emerald-600 font-bold" id="calRemaining">1750 kcal</span></div>
+        </div>
+
+        <!-- Hedef Kilo Kartı -->
+        <div class="glass-card rounded-3xl p-5 shadow-sm">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-xs font-bold text-slate-500">HEDEF KİLO YOLCULUĞU</span>
+            <span class="px-2.5 py-0.5 rounded-full bg-teal-100 text-teal-700 text-xs font-bold" id="weightDiffBadge">0 kg kaldı</span>
+          </div>
+          <div class="flex items-baseline gap-2">
+            <span class="text-3xl font-extrabold text-slate-900" id="dispCurrentWeight">0.0</span>
+            <span class="text-xs font-bold text-slate-400">kg → Hedef: <span id="dispTargetWeight" class="text-teal-600">0.0</span> kg</span>
+          </div>
+          <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden my-3">
+            <div id="weightProgressBar" class="h-full bg-gradient-to-r from-teal-500 to-cyan-400 rounded-full transition-all duration-500" style="width: 0%"></div>
+          </div>
+          <div class="text-xs font-semibold text-slate-600">Başlangıç: <span id="dispStartWeight">0.0</span> kg</div>
+        </div>
+
+        <!-- Su & Mail Otomasyon Kartı -->
+        <div class="glass-card rounded-3xl p-5 shadow-sm">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-xs font-bold text-slate-500">SU & E-POSTA TAKİBİ</span>
+            <span class="px-2.5 py-0.5 rounded-full bg-cyan-100 text-cyan-700 text-xs font-bold" id="waterTargetLabel">Hedef: 3.0 L</span>
+          </div>
+          <div class="text-3xl font-extrabold text-cyan-600"><span id="waterConsumed">0.00</span> <span class="text-sm font-semibold text-slate-400">Litre</span></div>
+          <div class="flex gap-2 mt-3">
+            <button type="button" onclick="addWater(0.25)" class="flex-1 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-600 text-white font-bold text-xs transition">+1 Bardak (250ml)</button>
+            <button type="button" onclick="addWater(0.5)" class="flex-1 py-2 rounded-xl bg-cyan-50 hover:bg-cyan-100 text-cyan-700 font-bold text-xs transition">+0.5 Litre</button>
+          </div>
+          <div class="mt-2.5 flex items-center justify-between text-[11px] text-slate-500">
+            <span id="lastWaterTimeLabel">Henüz su girişi yok</span>
+            <button type="button" onclick="triggerWaterEmailAlert(true)" class="text-cyan-700 font-bold underline">Mail Test Et</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ANA İÇERİK IZGARASI -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        
+        <!-- SOL 2 SÜTUN: ÖĞÜN EKLEME VE GÜNLÜK LİSTE -->
+        <div id="secMeals" class="lg:col-span-2 space-y-5">
+          <div class="glass-card rounded-3xl p-5 shadow-sm">
+            <h3 class="text-base font-extrabold text-slate-900 mb-3">Öğün veya İçecek Ekle</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5">
+              <select id="mealTypeInput" class="sm:col-span-3 px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-sm font-semibold">
+                <option value="Kahvaltı">Kahvaltı</option>
+                <option value="Öğle Yemeği">Öğle Yemeği</option>
+                <option value="Ara Öğün">Ara Öğün</option>
+                <option value="Akşam Yemeği">Akşam Yemeği</option>
+              </select>
+              <input type="text" id="mealNameInput" placeholder="Ne yedin? (Örn: Izgara tavuk + salata)" class="sm:col-span-6 px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-sm" />
+              <input type="number" id="mealCalInput" placeholder="Kalori (kcal)" class="sm:col-span-3 px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-sm" />
+            </div>
+
+            <!-- HIZLI HAZIR SEÇENEKLER -->
+            <div class="flex flex-wrap gap-1.5 mt-3">
+              <button type="button" onclick="quickFillMeal('Kahvaltı', 'Muzsuz Yulaf Lapası (4 yk yulaf + süt + 2 ceviz)', 320)" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-emerald-50 text-slate-700 text-xs font-semibold">+ Muzsuz Yulaf (320 kcal)</button>
+              <button type="button" onclick="quickFillMeal('Öğle Yemeği', 'Izgara Tavuk + Salata + Ayran', 520)" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-emerald-50 text-slate-700 text-xs font-semibold">+ Izgara Tavuk Menü (520 kcal)</button>
+              <button type="button" onclick="quickFillMeal('Ara Öğün', 'Portakal Çiçekli Beyaz Çay (Şekersiz)', 0)" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-emerald-50 text-slate-700 text-xs font-semibold">+ Beyaz Çay (0 kcal)</button>
+              <button type="button" onclick="quickFillMeal('Akşam Yemeği', 'Fırın Somon / Tavuk + Yoğurt + Salata', 480)" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-emerald-50 text-slate-700 text-xs font-semibold">+ Hafif Akşam Tabağı (480 kcal)</button>
+            </div>
+
+            <button type="button" onclick="addMealEntry()" class="w-full mt-4 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm transition">
+              Günlüğe Kaydet
+            </button>
+          </div>
+
+          <!-- BUGÜNKÜ ÖĞÜNLER LİSTESİ -->
+          <div class="glass-card rounded-3xl p-5 shadow-sm">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="text-base font-extrabold text-slate-900">Bugünkü Beslenme Kayıtların</h3>
+              <span class="text-xs font-bold text-slate-400" id="mealCountLabel">0 kayıt</span>
+            </div>
+            <div id="mealListContainer" class="space-y-2.5">
+              <div class="text-center py-8 text-sm text-slate-400">Henüz öğün kaydı girilmedi. Yukarıdan ilk öğününü ekleyebilirsin.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SAĞ SÜTUN: OTOMATİK TARTI GÜNLERİ VE E-POSTA LOGU -->
+        <div id="secWeighIn" class="space-y-5">
+          <!-- TARTI TAKVİMİ -->
+          <div class="glass-card rounded-3xl p-5 shadow-sm">
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="text-base font-extrabold text-slate-900">Tartı Günlerin</h3>
+              <span class="px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-700 text-xs font-bold" id="nextWeighCountdown">Haftalık</span>
+            </div>
+            <p class="text-xs text-slate-500 mb-3">Başlangıç tarihine göre sistem tarafından belirlenen resmi tartı günlerin:</p>
+            
+            <!-- YENİ KİLO GÜNCELLEME -->
+            <div class="flex gap-2 mb-4">
+              <input type="number" step="0.01" id="newWeightInput" placeholder="Yeni kilon (kg)" class="flex-1 px-3 py-2 rounded-xl border border-slate-200 bg-white text-sm" />
+              <button type="button" onclick="updateCurrentWeight()" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs">Güncelle</button>
+            </div>
+
+            <div id="weighInScheduleList" class="space-y-2 max-h-60 overflow-y-auto pr-1"></div>
+          </div>
+
+          <!-- OTOMATİK E-POSTA BİLDİRİM KUTUSU -->
+          <div class="glass-card rounded-3xl p-5 shadow-sm">
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="text-sm font-extrabold text-slate-900">Otomatik E-Posta Bildirimleri</h3>
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse-soft"></span>
+            </div>
+            <p class="text-[11px] text-slate-500 mb-3">2 saat boyunca su girişi yapılmadığında <strong id="mailTargetDisp">mail</strong> adresine otomatik hatırlatma gönderilir.</p>
+            <div id="emailLogContainer" class="space-y-2 max-h-44 overflow-y-auto text-xs">
+              <div class="p-2.5 rounded-xl bg-slate-50 text-slate-400">Su takibi aktif. Gecikme olursa bildirim burada ve mail kutunda görünür.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MOBİL ALT GEZİNTİ ÇUBUĞU -->
+      <div id="mobileBottomNav" class="hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-4 py-2 flex justify-around items-center z-40">
+        <button type="button" onclick="scrollToSec('secSummary')" class="flex flex-col items-center text-emerald-600 font-bold text-[11px]"><span>📊</span><span>Özet</span></button>
+        <button type="button" onclick="scrollToSec('secMeals')" class="flex flex-col items-center text-slate-600 font-bold text-[11px]"><span>🥗</span><span>Öğün Ekle</span></button>
+        <button type="button" onclick="addWater(0.25)" class="flex flex-col items-center text-cyan-600 font-bold text-[11px]"><span>💧</span><span>+Su İçtim</span></button>
+        <button type="button" onclick="scrollToSec('secWeighIn')" class="flex flex-col items-center text-slate-600 font-bold text-[11px]"><span>⚖️</span><span>Tartı</span></button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const DB_USERS_KEY = 'arda_fit_users_v3';
+    const DB_SESSION_KEY = 'arda_fit_session_v3';
+    let currentUser = null;
+    let waterCheckInterval = null;
+
+    function getUsers() {
+      try {
+        return JSON.parse(localStorage.getItem(DB_USERS_KEY)) || {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function saveUsers(users) {
+      localStorage.setItem(DB_USERS_KEY, JSON.stringify(users));
+    }
+
+    function showAuthAlert(msg, isError = true) {
+      const box = document.getElementById('authAlert');
+      box.textContent = msg;
+      box.className = `mb-4 p-3 rounded-xl text-xs font-bold ${isError ? 'bg-rose-50 text-rose-600 border border-rose-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'}`;
+      box.classList.remove('hidden');
+    }
+
+    function switchAuthTab(tab) {
+      document.getElementById('authAlert').classList.add('hidden');
+      const isLogin = tab === 'login';
+      document.getElementById('loginBox').classList.toggle('hidden', !isLogin);
+      document.getElementById('registerBox').classList.toggle('hidden', isLogin);
+      document.getElementById('tabLogin').className = isLogin
+        ? 'py-2.5 rounded-xl font-bold text-sm bg-white text-emerald-700 shadow-sm transition'
+        : 'py-2.5 rounded-xl font-bold text-sm text-slate-500 hover:text-slate-800 transition';
+      document.getElementById('tabRegister').className = !isLogin
+        ? 'py-2.5 rounded-xl font-bold text-sm bg-white text-emerald-700 shadow-sm transition'
+        : 'py-2.5 rounded-xl font-bold text-sm text-slate-500 hover:text-slate-800 transition';
+    }
+
+    function handleRegister() {
+      const name = document.getElementById('regName').value.trim();
+      const email = document.getElementById('regEmail').value.trim().toLowerCase();
+      const password = document.getElementById('regPassword').value.trim();
+
+      if (!name) {
+        showAuthAlert('Lütfen adını ve soyadını gir.');
+        return;
+      }
+      if (!email || !email.includes('@')) {
+        showAuthAlert('Lütfen geçerli bir e-posta adresi gir.');
+        return;
+      }
+      if (password.length < 4) {
+        showAuthAlert('Şifren en az 4 karakter olmalıdır.');
+        return;
+      }
+
+      const users = getUsers();
+      if (users[email]) {
+        showAuthAlert('Bu e-posta adresi zaten kayıtlı. Giriş Yap sekmesini kullanabilirsin.');
+        return;
+      }
+
+      const newUser = {
+        name,
+        email,
+        password,
+        profile: null,
+        meals: [],
+        waterLiters: 0,
+        lastWaterTimestamp: Date.now(),
+        emailLogs: []
+      };
+
+      users[email] = newUser;
+      saveUsers(users);
+      localStorage.setItem(DB_SESSION_KEY, email);
+      currentUser = newUser;
+
+      showAuthAlert('Hesabın oluşturuldu! Kurulum ekranına yönlendiriliyorsun...', false);
+      setTimeout(() => {
+        routeUser();
+      }, 300);
+    }
+
+    function handleLogin() {
+      const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+      const password = document.getElementById('loginPassword').value.trim();
+
+      if (!email || !password) {
+        showAuthAlert('Lütfen e-posta adresini ve şifreni gir.');
+        return;
+      }
+
+      const users = getUsers();
+      const user = users[email];
+      if (!user || user.password !== password) {
+        showAuthAlert('E-posta adresi veya şifre hatalı.');
+        return;
+      }
+
+      localStorage.setItem(DB_SESSION_KEY, email);
+      currentUser = user;
+      routeUser();
+    }
+
+    function logoutUser() {
+      localStorage.removeItem(DB_SESSION_KEY);
+      currentUser = null;
+      if (waterCheckInterval) clearInterval(waterCheckInterval);
+      document.getElementById('dashboardScreen').classList.add('hidden');
+      document.getElementById('setupScreen').classList.add('hidden');
+      document.getElementById('authScreen').classList.remove('hidden');
+      document.getElementById('authAlert').classList.add('hidden');
+    }
+
+    function routeUser() {
+      const savedEmail = localStorage.getItem(DB_SESSION_KEY);
+      const users = getUsers();
+      if (!savedEmail || !users[savedEmail]) {
+        document.getElementById('authScreen').classList.remove('hidden');
+        document.getElementById('setupScreen').classList.add('hidden');
+        document.getElementById('dashboardScreen').classList.add('hidden');
+        return;
+      }
+
+      currentUser = users[savedEmail];
+      document.getElementById('authScreen').classList.add('hidden');
+
+      if (!currentUser.profile) {
+        document.getElementById('setupStartDate').value = new Date().toISOString().split('T')[0];
+        document.getElementById('setupScreen').classList.remove('hidden');
+        document.getElementById('dashboardScreen').classList.add('hidden');
+      } else {
+        document.getElementById('setupScreen').classList.add('hidden');
+        document.getElementById('dashboardScreen').classList.remove('hidden');
+        renderDashboard();
+        startWaterWatcher();
+      }
+    }
+
+    function saveInitialSetup() {
+      const startDate = document.getElementById('setupStartDate').value;
+      const gender = document.getElementById('setupGender').value;
+      const currentWeight = parseFloat(document.getElementById('setupCurrentWeight').value);
+      const targetWeight = parseFloat(document.getElementById('setupTargetWeight').value);
+      const height = parseInt(document.getElementById('setupHeight').value, 10);
+      const age = parseInt(document.getElementById('setupAge').value, 10);
+
+      if (!startDate || isNaN(currentWeight) || isNaN(targetWeight) || isNaN(height) || isNaN(age)) {
+        alert('Lütfen tüm alanları eksiksiz doldur.');
+        return;
+      }
+
+      // Mifflin-St Jeor Kalori Hesabı (Masa başı aktivite + 550 kcal açık)
+      let bmr = (10 * currentWeight) + (6.25 * height) - (5 * age) + (gender === 'male' ? 5 : -161);
+      let tdee = bmr * 1.2;
+      let dailyCalTarget = Math.max(1300, Math.round((tdee - 550) / 10) * 10);
+      let waterTarget = parseFloat(((currentWeight * 32) / 1000).toFixed(1));
+
+      currentUser.profile = {
+        startDate,
+        gender,
+        startWeight: currentUser.profile ? currentUser.profile.startWeight : currentWeight,
+        currentWeight,
+        targetWeight,
+        height,
+        age,
+        dailyCalTarget,
+        waterTarget
+      };
+
+      persistCurrentUser();
+      routeUser();
+    }
+
+    function openSetupEdit() {
+      const p = currentUser.profile;
+      document.getElementById('setupStartDate').value = p.startDate;
+      document.getElementById('setupGender').value = p.gender;
+      document.getElementById('setupCurrentWeight').value = p.currentWeight;
+      document.getElementById('setupTargetWeight').value = p.targetWeight;
+      document.getElementById('setupHeight').value = p.height;
+      document.getElementById('setupAge').value = p.age;
+      document.getElementById('dashboardScreen').classList.add('hidden');
+      document.getElementById('setupScreen').classList.remove('hidden');
+    }
+
+    function persistCurrentUser() {
+      const users = getUsers();
+      users[currentUser.email] = currentUser;
+      saveUsers(users);
+    }
+
+    function renderDashboard() {
+      const p = currentUser.profile;
+      document.getElementById('dashUserName').textContent = currentUser.name;
+      document.getElementById('dashUserEmail').textContent = currentUser.email;
+      document.getElementById('mailTargetDisp').textContent = currentUser.email;
+      document.getElementById('dashDateLabel').textContent = new Date().toLocaleDateString('tr-TR', { weekday: 'long', day: 'numeric', month: 'long' });
+
+      // Kalori Durumu
+      const consumed = currentUser.meals.reduce((acc, m) => acc + Number(m.cal || 0), 0);
+      const remaining = Math.max(0, p.dailyCalTarget - consumed);
+      const pct = Math.min(100, Math.round((consumed / p.dailyCalTarget) * 100));
+
+      document.getElementById('calConsumed').textContent = consumed;
+      document.getElementById('calTarget').textContent = p.dailyCalTarget;
+      document.getElementById('calRemaining').textContent = remaining + ' kcal';
+      document.getElementById('calPercentBadge').textContent = '%' + pct;
+      document.getElementById('calProgressBar').style.width = pct + '%';
+
+      // Kilo Durumu
+      document.getElementById('dispCurrentWeight').textContent = p.currentWeight.toFixed(2);
+      document.getElementById('dispTargetWeight').textContent = p.targetWeight.toFixed(1);
+      document.getElementById('dispStartWeight').textContent = p.startWeight.toFixed(2);
+      const leftKg = Math.max(0, p.currentWeight - p.targetWeight).toFixed(1);
+      document.getElementById('weightDiffBadge').textContent = leftKg + ' kg kaldı';
+
+      const totalToLose = Math.max(0.1, p.startWeight - p.targetWeight);
+      const lostSoFar = Math.max(0, p.startWeight - p.currentWeight);
+      const wPct = Math.min(100, Math.round((lostSoFar / totalToLose) * 100));
+      document.getElementById('weightProgressBar').style.width = wPct + '%';
+
+      // Su Durumu
+      document.getElementById('waterTargetLabel').textContent = 'Hedef: ' + p.waterTarget + ' L';
+      document.getElementById('waterConsumed').textContent = currentUser.waterLiters.toFixed(2);
+      if (currentUser.lastWaterTimestamp) {
+        const t = new Date(currentUser.lastWaterTimestamp);
+        document.getElementById('lastWaterTimeLabel').textContent = 'Son su: ' + t.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+      }
+
+      renderMeals();
+      renderWeighInSchedule();
+      renderWarmMealReminder();
+      renderEmailLogs();
+    }
+
+    function renderWarmMealReminder() {
+      const hour = new Date().getHours();
+      let slot = 'Ara Öğün';
+      let msg = 'Masa başında odaklanmanı korumak için şekersiz beyaz çay ve 1 bardak su iyi gider!';
+      if (hour >= 6 && hour < 11) {
+        slot = 'Güne Başlangıç • Kahvaltı Vakti';
+        msg = 'Güne protein ve lifle başlaman tüm gün iştahını dengeler. Kahvaltını ekledin mi?';
+      } else if (hour >= 11 && hour < 15) {
+        slot = 'Öğle Molası • Denge Zamanı';
+        msg = 'Öğle yemeğinde ekmek ve pilav yerine protein + salata seçerek hedefine bir adım daha yaklaş!';
+      } else if (hour >= 17 && hour < 21) {
+        slot = 'Akşam Yemeği • Hafif Kapanış';
+        msg = 'Günü hafif ve besleyici bir akşam öğünüyle kapatıp metabolizmanı gece boyu dinlendir.';
+      }
+      document.getElementById('reminderSlotTitle').textContent = slot;
+      document.getElementById('reminderSlotText').textContent = msg;
+    }
+
+    function quickFillMeal(type, name, cal) {
+      document.getElementById('mealTypeInput').value = type;
+      document.getElementById('mealNameInput').value = name;
+      document.getElementById('mealCalInput').value = cal;
+      addMealEntry();
+    }
+
+    function addMealEntry() {
+      const type = document.getElementById('mealTypeInput').value;
+      const name = document.getElementById('mealNameInput').value.trim();
+      const cal = parseInt(document.getElementById('mealCalInput').value, 10);
+
+      if (!name || isNaN(cal) || cal < 0) {
+        alert('Lütfen öğün adını ve kalorisini gir.');
+        return;
+      }
+
+      currentUser.meals.unshift({
+        id: Date.now(),
+        type,
+        name,
+        cal,
+        time: new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })
+      });
+
+      document.getElementById('mealNameInput').value = '';
+      document.getElementById('mealCalInput').value = '';
+      persistCurrentUser();
+      renderDashboard();
+    }
+
+    function deleteMeal(id) {
+      currentUser.meals = currentUser.meals.filter(m => m.id !== id);
+      persistCurrentUser();
+      renderDashboard();
+    }
+
+    function renderMeals() {
+      const container = document.getElementById('mealListContainer');
+      document.getElementById('mealCountLabel').textContent = currentUser.meals.length + ' kayıt';
+      if (currentUser.meals.length === 0) {
+        container.innerHTML = '<div class="text-center py-8 text-sm text-slate-400">Henüz öğün kaydı girilmedi. Yukarıdan ilk öğününü ekleyebilirsin.</div>';
+        return;
+      }
+      container.innerHTML = currentUser.meals.map(m => `
+        <div class="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-700 text-[10px] font-bold">${m.type}</span>
+              <span class="text-[11px] text-slate-400">${m.time}</span>
+            </div>
+            <div class="text-sm font-bold text-slate-800 mt-1">${m.name}</div>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="text-sm font-extrabold text-emerald-600">${m.cal} kcal</span>
+            <button type="button" onclick="deleteMeal(${m.id})" class="text-rose-400 hover:text-rose-600 text-xs font-bold">Sil</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function addWater(liters) {
+      currentUser.waterLiters = parseFloat((currentUser.waterLiters + liters).toFixed(2));
+      currentUser.lastWaterTimestamp = Date.now();
+      persistCurrentUser();
+      renderDashboard();
+    }
+
+    function updateCurrentWeight() {
+      const val = parseFloat(document.getElementById('newWeightInput').value);
+      if (isNaN(val) || val < 30 || val > 300) {
+        alert('Geçerli bir kilo değeri gir.');
+        return;
+      }
+      currentUser.profile.currentWeight = val;
+      document.getElementById('newWeightInput').value = '';
+      persistCurrentUser();
+      renderDashboard();
+    }
+
+    function renderWeighInSchedule() {
+      const start = new Date(currentUser.profile.startDate);
+      const list = document.getElementById('weighInScheduleList');
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      let html = '';
+      let nextDaysLeft = null;
+
+      for (let w = 1; w <= 8; w++) {
+        const d = new Date(start);
+        d.setDate(start.getDate() + w * 7);
+        d.setHours(0, 0, 0, 0);
+        const diffDays = Math.round((d - today) / (1000 * 60 * 60 * 24));
+        if (diffDays >= 0 && nextDaysLeft === null) nextDaysLeft = diffDays;
+
+        const isPast = diffDays < 0;
+        const isToday = diffDays === 0;
+        html += `
+          <div class="flex items-center justify-between p-2.5 rounded-xl border ${isToday ? 'bg-emerald-50 border-emerald-300' : isPast ? 'bg-slate-50 border-slate-100 opacity-60' : 'bg-white border-slate-100'}">
+            <div>
+              <div class="text-xs font-extrabold text-slate-800">${w}. Hafta Tartısı</div>
+              <div class="text-[11px] text-slate-500">${d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', weekday: 'short' })}</div>
+            </div>
+            <span class="text-[11px] font-bold px-2 py-0.5 rounded-lg ${isToday ? 'bg-emerald-600 text-white' : isPast ? 'text-slate-400' : 'bg-teal-50 text-teal-700'}">
+              ${isToday ? 'BUGÜN!' : isPast ? 'Tamamlandı' : diffDays + ' gün kaldı'}
+            </span>
+          </div>
+        `;
+      }
+      list.innerHTML = html;
+      document.getElementById('nextWeighCountdown').textContent = nextDaysLeft === 0 ? 'Bugün Tartı Günü' : (nextDaysLeft ? nextDaysLeft + ' gün kaldı' : 'Plan Aktif');
+    }
+
+    function triggerWaterEmailAlert(manual = false) {
+      const timeStr = new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+      const msg = `${timeStr} • ${currentUser.email} adresine su içme hatırlatma e-postası gönderildi (${manual ? 'Manuel Test' : '2 saat su girişi yapılmadı'}).`;
+      currentUser.emailLogs.unshift(msg);
+      persistCurrentUser();
+      renderEmailLogs();
+      if (manual) {
+        alert(`Hatırlatma maili ${currentUser.email} adresine iletildi!`);
+      }
+    }
+
+    function renderEmailLogs() {
+      const box = document.getElementById('emailLogContainer');
+      if (!currentUser.emailLogs || currentUser.emailLogs.length === 0) return;
+      box.innerHTML = currentUser.emailLogs.map(log => `
+        <div class="p-2.5 rounded-xl bg-cyan-50 border border-cyan-100 text-cyan-900 font-medium">${log}</div>
+      `).join('');
+    }
+
+    function startWaterWatcher() {
+      if (waterCheckInterval) clearInterval(waterCheckInterval);
+      waterCheckInterval = setInterval(() => {
+        if (!currentUser) return;
+        const twoHoursMs = 2 * 60 * 60 * 1000;
+        if (Date.now() - currentUser.lastWaterTimestamp >= twoHoursMs) {
+          triggerWaterEmailAlert(false);
+          currentUser.lastWaterTimestamp = Date.now();
+          persistCurrentUser();
+        }
+      }, 60000);
+    }
+
+    function setViewMode(mode) {
+      const wrapper = document.getElementById('appWrapper');
+      const bottomNav = document.getElementById('mobileBottomNav');
+      const btnD = document.getElementById('btnDesktopView');
+      const btnM = document.getElementById('btnMobileView');
+
+      if (mode === 'mobile') {
+        wrapper.classList.add('mobile-shell');
+        bottomNav.classList.remove('hidden');
+        btnM.className = 'px-3 py-1 rounded-lg font-semibold bg-emerald-500 text-white transition';
+        btnD.className = 'px-3 py-1 rounded-lg font-semibold text-slate-300 hover:text-white transition';
+      } else {
+        wrapper.classList.remove('mobile-shell');
+        if (window.innerWidth >= 768) bottomNav.classList.add('hidden');
+        btnD.className = 'px-3 py-1 rounded-lg font-semibold bg-emerald-500 text-white transition';
+        btnM.className = 'px-3 py-1 rounded-lg font-semibold text-slate-300 hover:text-white transition';
+      }
+    }
+
+    function focusMealInput() {
+      document.getElementById('mealNameInput').focus();
+    }
+
+    function scrollToSec(id) {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Sayfa yüklendiğinde oturum kontrolü ve ekran uyumu
+    window.addEventListener('DOMContentLoaded', () => {
+      if (window.innerWidth < 768) {
+        document.getElementById('mobileBottomNav').classList.remove('hidden');
+      }
+      routeUser();
+    });
+  </script>
+</body>
+</html>
+ background: linear-gradient(135deg, #059669 0%, #0284c7 55%, #f97316 100%);
         }
         .emerald-sky-gradient {
             background: linear-gradient(135deg, #10b981 0%, #0ea5e9 100%);
