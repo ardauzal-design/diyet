@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arda ile Fit Kal • Akıllı Diyet, Tartı & Su Otomasyonu</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #ecfdf5 0%, #eff6ff 48%, #fff7ed 100%);
+            color: #0f172a;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        h1, h2, h3, .brand-font {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.86);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.95);
+            box-shadow: 0 12px 32px -10px rgba(15, 23, 42, 0.06), 0 4px 12px -2px rgba(16, 185, 129, 0.05);
+        }
+        .vibrant-gradient {
+            background: linear-gradient(135deg, #059669 0%, #0284c7 55%, #f97316 100%);
+        }
+        .emerald-sky-gradient {
+            background: linear-gradient(135deg, #10b981 0%, #0ea5e9 100%);
+        }
+        .coral-gradient {
+            background: linear-gradient(135deg, #f97316 0%, #fb7185 100%);
+        }
+        .circle-progress {
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+            transition: stroke-dashoffset 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        /* Su Dalgası Animasyonu */
+        .water-tank {
+            position: relative;
+            overflow: hidden;
+            background: #e0f2fe;
+        }
+        .water-fill {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
+            transition: height 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .water-wave {
+            position: absolute;
+            top: -10px;
+            left: -50%;
+            width: 200%;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.35);
+            border-radius: 43%;
+            animation: waveRotate 5s linear infinite;
+        }
+        @keyframes waveRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .pulse-dot {
+            animation: pulseAnim 1.4s infinite ease-in-out both;
+        }
+        .pulse-dot:nth-child(1) { animation-delay: -0.32s; }
+        .pulse-dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes pulseAnim {
+            0%, 80%, 100% { transform: scale(0); opacity: 0.4; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+        .float-blob {
+            position: fixed;
+            border-radius: 9999px;
+            filter: blur(75px);
+            z-index: -1;
+            opacity: 0.45;
+            pointer-events: none;
+        }
+        /* Dokunmatik Buton Standartları ve Mobil/Masaüstü Görünüm Çerçevesi */
+        .touch-target {
+            min-height: 44px;
+        }
+        body.mobile-preview-mode {
+            background: #0f172a;
+            padding: 16px 8px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        body.mobile-preview-mode #app-shell {
+            width: 100%;
+            max-width: 395px;
+            min-height: 812px;
+            background: linear-gradient(135deg, #ecfdf5 0%, #eff6ff 48%, #fff7ed 100%);
+            border-radius: 2.75rem;
+            border: 8px solid #1e293b;
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.65), 0 0 0 2px rgba(255, 255, 255, 0.12);
+            overflow-x: hidden;
+            overflow-y: auto;
+            position: relative;
+        }
+        body.mobile-preview-mode #dashboard-view main {
+            padding-left: 12px;
+            padding-right: 12px;
+        }
+        body.mobile-preview-mode .desktop-grid-3,
+        body.mobile-preview-mode .desktop-grid-12 {
+            grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+        }
+        body.mobile-preview-mode .desktop-col-span {
+            grid-column: span 1 / span 1 !important;
+        }
+        body.mobile-preview-mode #mobile-bottom-nav {
+            display: flex !important;
+            position: sticky;
+            bottom: 0;
+        }
+        body.mobile-preview-mode .hide-in-mobile-mode {
+            display: none !important;
+        }
+        @media (max-width: 767px) {
+            #mobile-bottom-nav {
+                display: flex;
+            }
+            #dashboard-view {
+                padding-bottom: 5.5rem;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-emerald-200 selection:text-emerald-950">
+
+    <!-- Arka Plan Canlı Renk Küreleri -->
+    <div class="float-blob w-80 h-80 bg-emerald-300 top-[-4rem] left-[-4rem]"></div>
+    <div class="float-blob w-96 h-96 bg-sky-300 bottom-[-6rem] right-[-4rem]"></div>
+    <div class="float-blob w-72 h-72 bg-orange-200 top-1/3 right-1/4"></div>
+
+    <!-- Bildirim Toast Alanı -->
+    <div id="toast-container" class="fixed top-20 right-4 left-4 sm:left-auto sm:right-5 z-50 flex flex-col gap-2.5 sm:max-w-sm pointer-events-none"></div>
+
+    <!-- Tüm Uygulama Kabuğu (Masaüstü Tam Ekran / Mobil 395px Çerçeve) -->
+    <div id="app-shell" class="w-full min-h-screen flex flex-col">
+
+    <!-- Başlangıç Yükleniyor Ekranı -->
+    <div id="global-loader" class="fixed inset-0 bg-white/95 backdrop-blur-lg z-50 flex flex-col items-center justify-center">
+        <div class="w-16 h-16 rounded-3xl emerald-sky-gradient text-white flex items-center justify-center shadow-xl shadow-emerald-200 mb-4 animate-bounce">
+            <i class="fa-solid fa-fire-flame-curved text-2xl"></i>
+        </div>
+        <h2 class="text-lg font-extrabold text-slate-800">Arda ile Fit Kal</h2>
+        <p class="text-xs text-slate-500 mt-1">Güvenli oturum kontrol ediliyor...</p>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- 1. ZORUNLU GİRİŞ & KAYIT EKRANI (MİSAFİR GİRİŞİ YOK)                   -->
+    <!-- ===================================================================== -->
+    <div id="auth-view" class="hidden flex-1 flex items-center justify-center p-4">
+        <div class="glass-card rounded-[2rem] max-w-md w-full p-6 sm:p-9 shadow-2xl">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 rounded-3xl emerald-sky-gradient text-white flex items-center justify-center mx-auto shadow-lg shadow-sky-200 mb-4">
+                    <i class="fa-solid fa-fire-flame-curved text-2xl"></i>
+                </div>
+                <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-emerald-600 via-sky-600 to-orange-500 bg-clip-text text-transparent">
+                    Arda ile Fit Kal
+                </h1>
+                <p class="text-xs sm:text-sm text-slate-500 mt-1.5">
+                    Kişisel verileriniz için e-posta hesabınızla giriş yapın
+                </p>
+            </div>
+
+            <!-- Giriş / Kayıt Sekmeleri -->
+            <div class="grid grid-cols-2 gap-1.5 p-1.5 bg-slate-100/90 rounded-2xl mb-5">
+                <button type="button" id="tab-login" onclick="switchAuthMode('login')" class="touch-target py-2.5 text-xs sm:text-sm font-bold rounded-xl bg-white text-emerald-700 shadow-sm transition">
+                    Giriş Yap
+                </button>
+                <button type="button" id="tab-register" onclick="switchAuthMode('register')" class="touch-target py-2.5 text-xs sm:text-sm font-bold rounded-xl text-slate-500 hover:text-slate-800 transition">
+                    Yeni Kayıt Ol
+                </button>
+            </div>
+
+            <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-4">
+                <div id="register-name-group" class="hidden">
+                    <label class="block text-xs font-semibold text-slate-700 mb-1.5">Adınız Soyadınız</label>
+                    <div class="relative">
+                        <i class="fa-regular fa-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                        <input type="text" id="auth-name" placeholder="Örn: Arda Yılmaz"
+                            class="touch-target w-full pl-11 pr-4 py-3 rounded-2xl bg-white border border-slate-200 text-base sm:text-sm focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1.5">E-posta Adresiniz</label>
+                    <div class="relative">
+                        <i class="fa-regular fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                        <input type="email" id="auth-email" required placeholder="ornek@mail.com"
+                            class="touch-target w-full pl-11 pr-4 py-3 rounded-2xl bg-white border border-slate-200 text-base sm:text-sm focus:outline-none focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10 transition">
+                    </div>
+                    <p class="text-[11px] text-slate-400 mt-1">Su ve tartı hatırlatmaları bu adrese tanımlanır.</p>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1.5">Şifreniz</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                        <input type="password" id="auth-password" required minlength="6" placeholder="En az 6 karakter"
+                            class="touch-target w-full pl-11 pr-4 py-3 rounded-2xl bg-white border border-slate-200 text-base sm:text-sm focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition">
+                    </div>
+                </div>
+
+                <div id="auth-error" class="hidden p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium"></div>
+
+                <button type="submit" id="auth-btn" class="touch-target w-full py-3.5 rounded-2xl emerald-sky-gradient hover:opacity-95 text-white font-bold text-sm shadow-lg shadow-emerald-200/80 transition transform active:scale-[0.99]">
+                    Giriş Yap
+                </button>
+            </form>
+
+            <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-center gap-2 text-[11px] text-slate-400">
+                <i class="fa-solid fa-shield-halved text-emerald-500"></i>
+                <span>Mobil & Masaüstü tam uyumlu kişisel takip</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- 2. DİYETE BAŞLANGIÇ KURULUM SİHİRBAZI (ONBOARDING - ZORUNLU)          -->
+    <!-- ===================================================================== -->
+    <div id="onboarding-view" class="hidden flex-1 flex items-center justify-center p-3 sm:p-4">
+        <div class="glass-card rounded-[2rem] max-w-xl w-full p-5 sm:p-9 shadow-2xl border border-emerald-100 my-2">
+            <div class="flex items-center justify-between mb-5">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-2xl coral-gradient text-white flex items-center justify-center shadow-md shadow-orange-200 flex-shrink-0">
+                        <i class="fa-solid fa-rocket text-base"></i>
+                    </div>
+                    <div>
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-orange-600">Adım 1 / 1 • Kişisel Kurulum</span>
+                        <h2 class="text-lg sm:text-xl font-extrabold text-slate-800">Diyet Yolculuğunu Başlat</h2>
+                    </div>
+                </div>
+                <button onclick="handleLogout()" class="touch-target px-3 text-xs text-slate-400 hover:text-rose-600 font-semibold">Çıkış</button>
+            </div>
+
+            <p class="text-xs sm:text-sm text-slate-600 mb-5 bg-emerald-50/70 border border-emerald-100 p-3.5 rounded-2xl">
+                Hoş geldin <strong id="ob-welcome-name" class="text-emerald-800">Kullanıcı</strong>! Eski hiçbir kayıt olmadan sıfırdan başlıyoruz. Bilgilerini gir; sistem haftalık <strong>resmi tartı günlerini</strong> ve <strong>kalori hedefini</strong> otomatik planlasın.
+            </p>
+
+            <form onsubmit="completeOnboarding(event)" class="space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    <div class="p-3.5 rounded-2xl bg-sky-50/70 border border-sky-100">
+                        <label class="block text-xs font-bold text-sky-900 mb-1.5">
+                            <i class="fa-regular fa-calendar-check mr-1"></i>Diyete Başlangıç Tarihi
+                        </label>
+                        <input type="date" id="ob-start-date" required onchange="previewWeighInSchedule()"
+                            class="touch-target w-full px-3.5 py-2.5 rounded-xl bg-white border border-sky-200 text-base sm:text-sm font-semibold text-slate-800 focus:outline-none focus:border-sky-500">
+                        <p id="ob-weigh-preview" class="text-[11px] text-sky-700 mt-1.5 font-medium"></p>
+                    </div>
+
+                    <div class="p-3.5 rounded-2xl bg-orange-50/70 border border-orange-100">
+                        <label class="block text-xs font-bold text-orange-900 mb-1.5">
+                            <i class="fa-solid fa-venus-mars mr-1"></i>Cinsiyet
+                        </label>
+                        <select id="ob-gender" onchange="recalcOnboardingCalories()" class="touch-target w-full px-3.5 py-2.5 rounded-xl bg-white border border-orange-200 text-base sm:text-sm font-semibold text-slate-800 focus:outline-none focus:border-orange-500">
+                            <option value="male">Erkek</option>
+                            <option value="female">Kadın</option>
+                        </select>
+                        <p class="text-[11px] text-orange-700 mt-1.5">Metabolizma hesabında kullanılır.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Mevcut Kilo (kg)</label>
+                        <input type="number" step="0.01" min="35" max="300" id="ob-current-weight" required placeholder="88.50" oninput="recalcOnboardingCalories()"
+                            class="touch-target w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-base sm:text-sm font-semibold focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-emerald-700 mb-1">Hedef Kilo (kg)</label>
+                        <input type="number" step="0.1" min="35" max="250" id="ob-target-weight" required placeholder="74.0"
+                            class="touch-target w-full px-3.5 py-2.5 rounded-xl bg-emerald-50/40 border border-emerald-200 text-base sm:text-sm font-bold text-emerald-900 focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Boy (cm)</label>
+                        <input type="number" min="120" max="230" id="ob-height" required placeholder="175" oninput="recalcOnboardingCalories()"
+                            class="touch-target w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-base sm:text-sm font-semibold focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Yaş</label>
+                        <input type="number" min="15" max="99" id="ob-age" required placeholder="32" oninput="recalcOnboardingCalories()"
+                            class="touch-target w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-base sm:text-sm font-semibold focus:outline-none focus:border-emerald-500">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                    <div class="p-3.5 rounded-2xl bg-emerald-50/70 border border-emerald-200">
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="text-xs font-bold text-emerald-900">Günlük Kalori (kcal)</label>
+                            <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-600 text-white">Otomatik</span>
+                        </div>
+                        <input type="number" min="1000" max="4500" id="ob-calorie-goal" required value="1700"
+                            class="touch-target w-full px-3.5 py-2 rounded-xl bg-white border border-emerald-200 text-base font-extrabold text-emerald-800 focus:outline-none focus:border-emerald-500">
+                    </div>
+
+                    <div class="p-3.5 rounded-2xl bg-sky-50/70 border border-sky-200">
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="text-xs font-bold text-sky-900">Günlük Su Hedefi (L)</label>
+                            <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-sky-600 text-white">Kilo Bazlı</span>
+                        </div>
+                        <input type="number" step="0.1" min="1.5" max="6.0" id="ob-water-goal" required value="3.0"
+                            class="touch-target w-full px-3.5 py-2 rounded-xl bg-white border border-sky-200 text-base font-extrabold text-sky-800 focus:outline-none focus:border-sky-500">
+                    </div>
+                </div>
+
+                <button type="submit" class="touch-target w-full py-3.5 rounded-2xl vibrant-gradient hover:opacity-95 text-white font-bold text-sm shadow-lg shadow-emerald-200 transition flex items-center justify-center gap-2 mt-2">
+                    <span>Programımı Oluştur ve Panele Geç</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- 3. PROFİL & HEDEF GÜNCELLEME MODALI (MOBİL UYUMLU KAYDIRILABİLİR)     -->
+    <!-- ===================================================================== -->
+    <div id="settings-modal" class="fixed inset-0 bg-slate-900/45 backdrop-blur-sm z-50 hidden items-center justify-center p-3 sm:p-4 overflow-y-auto">
+        <div class="glass-card bg-white rounded-3xl max-w-md w-full p-5 sm:p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-base font-extrabold text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-sliders text-emerald-600"></i> Hedef & Otomasyon Ayarları
+                </h3>
+                <button onclick="closeSettingsModal()" class="touch-target w-10 h-10 rounded-full hover:bg-slate-100 text-slate-400 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <form onsubmit="saveSettingsModal(event)" class="space-y-3.5 text-sm">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Adınız</label>
+                    <input type="text" id="set-name" required class="touch-target w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-base sm:text-sm">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Diyete Başlangıç Tarihi</label>
+                        <input type="date" id="set-start-date" required class="touch-target w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-base sm:text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-emerald-700 mb-1">Hedef Kilo (kg)</label>
+                        <input type="number" step="0.1" id="set-target-weight" required class="touch-target w-full px-3.5 py-2.5 rounded-xl border border-emerald-200 bg-emerald-50/40 font-bold text-base sm:text-sm">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Günlük Kalori (kcal)</label>
+                        <input type="number" id="set-cal-goal" required class="touch-target w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-base sm:text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Su Hedefi (L)</label>
+                        <input type="number" step="0.1" id="set-water-goal" required class="touch-target w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-base sm:text-sm">
+                    </div>
+                </div>
+                <div class="p-3 rounded-2xl bg-sky-50 border border-sky-100">
+                    <label class="block text-xs font-bold text-sky-900 mb-1">
+                        <i class="fa-regular fa-envelope mr-1"></i>Su Hatırlatma Mail Süresi
+                    </label>
+                    <select id="set-water-interval" class="touch-target w-full px-3 py-2 rounded-xl bg-white border border-sky-200 text-xs font-semibold">
+                        <option value="60">Her 1 saatte bir su girilmezse mail uyarısı</option>
+                        <option value="120" selected>Her 2 saatte bir su girilmezse mail uyarısı</option>
+                        <option value="180">Her 3 saatte bir su girilmezse mail uyarısı</option>
+                    </select>
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeSettingsModal()" class="touch-target px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-500 hover:bg-slate-100">İptal</button>
+                    <button type="submit" class="touch-target px-5 py-2.5 rounded-xl text-xs font-bold emerald-sky-gradient text-white shadow-sm">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- 4. E-POSTA BİLDİRİM ÖNİZLEME & GÖNDERİM MODALI                        -->
+    <!-- ===================================================================== -->
+    <div id="email-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden items-center justify-center p-3 sm:p-4 overflow-y-auto">
+        <div class="glass-card bg-white rounded-3xl max-w-lg w-full p-5 sm:p-6 shadow-2xl border border-sky-100 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-10 h-10 rounded-2xl bg-sky-100 text-sky-600 flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid fa-envelope-open-text text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-extrabold text-slate-800">Su Hatırlatma E-Postası</h3>
+                        <p class="text-[11px] text-slate-500">Kayıtlı adresinize oluşturulan bildirim</p>
+                    </div>
+                </div>
+                <button onclick="closeEmailModal()" class="touch-target w-10 h-10 rounded-full hover:bg-slate-100 text-slate-400 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="rounded-2xl border border-slate-200 bg-slate-50/80 p-3.5 sm:p-4 space-y-2.5 text-xs">
+                <div class="flex flex-col sm:flex-row sm:justify-between border-b border-slate-200/70 pb-2 gap-1">
+                    <span class="text-slate-400 font-medium">Alıcı:</span>
+                    <span id="modal-mail-to" class="font-bold text-slate-800 break-all">kullanici@mail.com</span>
+                </div>
+                <div class="flex flex-col sm:flex-row sm:justify-between border-b border-slate-200/70 pb-2 gap-1">
+                    <span class="text-slate-400 font-medium">Konu:</span>
+                    <span id="modal-mail-subject" class="font-bold text-sky-700">💧 Su İçme Vakti!</span>
+                </div>
+                <div id="modal-mail-body" class="text-slate-700 leading-relaxed pt-1 whitespace-pre-line"></div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-2 mt-4">
+                <button onclick="copyEmailBody()" class="touch-target px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition flex items-center justify-center gap-1.5">
+                    <i class="fa-regular fa-copy"></i> İçeriği Kopyala
+                </button>
+                <a id="modal-mailto-link" href="#" class="touch-target px-4 py-2.5 rounded-xl emerald-sky-gradient text-white text-xs font-bold shadow-sm flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-paper-plane"></i> Mail Uygulamasında Aç
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- 5. ANA PORTAL EKRANI (DASHBOARD VIEW)                                 -->
+    <!-- ===================================================================== -->
+    <div id="dashboard-view" class="hidden flex-1 flex flex-col justify-between pb-16">
+
+        <!-- Canlı Üst Navigasyon + Masaüstü / Mobil Görünüm Seçici -->
+        <header class="sticky top-0 z-30 glass-card border-b border-white/80">
+            <div class="max-w-6xl mx-auto px-3 sm:px-4 py-2.5 flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <div class="w-10 h-10 rounded-2xl vibrant-gradient text-white flex items-center justify-center shadow-md shadow-emerald-200/60 flex-shrink-0">
+                        <i class="fa-solid fa-fire-flame-curved text-base"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-1.5">
+                            <span class="brand-font font-extrabold text-slate-800 text-sm sm:text-lg tracking-tight truncate">Arda ile Fit Kal</span>
+                            <span id="header-day-badge" class="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 flex-shrink-0">1. Gün</span>
+                        </div>
+                        <p id="header-user-info" class="text-[11px] text-slate-500 truncate max-w-[140px] sm:max-w-xs">kullanici@mail.com</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+                    <!-- MASAÜSTÜ / MOBİL GÖRÜNÜM SEÇİCİ PILL -->
+                    <div class="inline-flex items-center p-1 rounded-xl bg-slate-100/95 border border-slate-200/80" role="group" aria-label="Görünüm Seçici">
+                        <button type="button" id="view-btn-desktop" onclick="setViewportMode('desktop')" title="Masaüstü Görünümü"
+                            class="px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold bg-white text-emerald-700 shadow-2xs transition flex items-center gap-1">
+                            <i class="fa-solid fa-desktop"></i>
+                            <span class="hidden md:inline hide-in-mobile-mode">Masaüstü</span>
+                        </button>
+                        <button type="button" id="view-btn-mobile" onclick="setViewportMode('mobile')" title="Mobil Görünüm"
+                            class="px-2.5 py-1.5 rounded-lg text-[11px] font-bold text-slate-500 hover:text-slate-800 transition flex items-center gap-1">
+                            <i class="fa-solid fa-mobile-screen-button"></i>
+                            <span class="hidden md:inline hide-in-mobile-mode">Mobil</span>
+                        </button>
+                    </div>
+
+                    <button onclick="openSettingsModal()" aria-label="Hedef ve Ayarlar" class="touch-target px-3 py-2 rounded-xl bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 text-xs font-bold transition flex items-center gap-1.5 border border-slate-200/80 shadow-2xs">
+                        <i class="fa-solid fa-sliders text-emerald-600"></i>
+                        <span class="hidden sm:inline hide-in-mobile-mode">Ayarlar</span>
+                    </button>
+                    <button onclick="handleLogout()" aria-label="Çıkış Yap" class="touch-target px-3 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-bold transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span class="hidden sm:inline hide-in-mobile-mode">Çıkış</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="max-w-6xl w-full mx-auto px-3 sm:px-4 pt-4 sm:pt-6 space-y-5 sm:space-y-6">
+
+            <!-- BÖLÜM 1: SICAK ÖĞÜN HATIRLATMA KARTI (SAATE GÖRE DİNAMİK) -->
+            <section id="warm-meal-banner" class="rounded-3xl p-4 sm:p-6 text-white shadow-xl shadow-orange-200/50 coral-gradient relative overflow-hidden">
+                <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-3.5">
+                    <div class="space-y-1">
+                        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-xs text-[11px] font-bold">
+                            <i id="warm-banner-icon" class="fa-solid fa-sun"></i>
+                            <span id="warm-banner-tag">Sıcak Öğün Hatırlatması</span>
+                        </div>
+                        <h2 id="warm-banner-title" class="text-base sm:text-xl font-extrabold tracking-tight">Merhaba! Bugün neler yedin?</h2>
+                        <p id="warm-banner-desc" class="text-xs sm:text-sm text-white/90 max-w-2xl leading-relaxed">
+                            Öğünlerini düzenli kaydetmek metabolizmanı canlı tutar ve kalori açığını zahmetsizce korumanı sağlar.
+                        </p>
+                    </div>
+                    <button onclick="focusMealInput()" class="touch-target w-full sm:w-auto px-5 py-3 rounded-2xl bg-white text-orange-600 hover:bg-orange-50 font-extrabold text-xs sm:text-sm shadow-md transition flex items-center justify-center gap-2 whitespace-nowrap">
+                        <i class="fa-solid fa-utensils"></i>
+                        <span id="warm-banner-cta">Öğünümü Kaydet</span>
+                    </button>
+                </div>
+                <i class="fa-solid fa-bowl-rice absolute -right-4 -bottom-6 text-8xl text-white/10 pointer-events-none"></i>
+            </section>
+
+            <!-- BÖLÜM 2: 3 CANLI ANA KART (KALORİ • HEDEF KİLO • SU & E-POSTA OTOMASYONU) -->
+            <section id="sec-summary" class="desktop-grid-3 grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">
+
+                <!-- Kart 1: Kalori Bütçesi -->
+                <div class="glass-card rounded-3xl p-5 sm:p-6 flex flex-col justify-between">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="text-[11px] font-extrabold uppercase tracking-wider text-emerald-600">Günlük Kalori Bütçesi</span>
+                            <div class="mt-1.5 flex items-baseline gap-1.5">
+                                <span id="cal-remaining" class="text-3xl sm:text-4xl font-extrabold text-slate-800">0</span>
+                                <span class="text-xs font-semibold text-slate-400">kcal kaldı</span>
+                            </div>
+                        </div>
+                        <div class="relative w-20 h-20 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-20 h-20" viewBox="0 0 80 80">
+                                <circle cx="40" cy="40" r="32" fill="none" stroke="#e2e8f0" stroke-width="8"></circle>
+                                <circle id="cal-ring" class="circle-progress" cx="40" cy="40" r="32" fill="none" stroke="#10b981" stroke-width="8" stroke-linecap="round" stroke-dasharray="201" stroke-dashoffset="201"></circle>
+                            </svg>
+                            <span id="cal-pct" class="absolute text-xs font-extrabold text-slate-700">%0</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                        <span class="text-slate-500">Alınan: <strong id="cal-eaten" class="text-slate-800">0 kcal</strong></span>
+                        <span class="text-slate-500">Hedef: <strong id="cal-goal" class="text-emerald-700">1700 kcal</strong></span>
+                    </div>
+                </div>
+
+                <!-- Kart 2: Kilo & Hedef İlerlemesi -->
+                <div class="glass-card rounded-3xl p-5 sm:p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start gap-2">
+                            <span class="text-[11px] font-extrabold uppercase tracking-wider text-orange-600">Kilo & Hedef Takibi</span>
+                            <span id="bmi-badge" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-orange-50 text-orange-700">VKİ: --</span>
+                        </div>
+                        <div class="mt-1.5 flex flex-wrap items-baseline gap-1.5">
+                            <span id="dash-curr-weight" class="text-3xl font-extrabold text-slate-800">--</span>
+                            <span class="text-xs font-semibold text-slate-400">kg</span>
+                            <span class="text-xs text-slate-400 mx-0.5">→</span>
+                            <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-lg">Hedef: <span id="dash-target-weight">--</span> kg</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <div class="flex justify-between text-[11px] font-bold mb-1.5">
+                            <span id="dash-lost-weight" class="text-emerald-600">Değişim: 0.00 kg</span>
+                            <span id="dash-left-weight" class="text-slate-500">Kalan: -- kg</span>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden p-0.5">
+                            <div id="dash-weight-bar" class="coral-gradient h-2 rounded-full transition-all duration-700" style="width: 5%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kart 3: Canlı Su Takibi & Otomatik Mail Hatırlatıcı -->
+                <div id="sec-water" class="glass-card rounded-3xl p-5 sm:p-6 flex flex-col justify-between border border-sky-100">
+                    <div class="flex items-center justify-between gap-3">
+                        <div>
+                            <span class="text-[11px] font-extrabold uppercase tracking-wider text-sky-600">Su & Otomatik Mail</span>
+                            <div class="mt-1 flex items-baseline gap-1.5">
+                                <span id="dash-water-liters" class="text-3xl font-extrabold text-slate-800">0.00</span>
+                                <span class="text-xs font-semibold text-slate-400">/ <span id="dash-water-goal">3.0</span> L</span>
+                            </div>
+                            <p id="water-timer-status" class="text-[11px] text-sky-700 font-semibold mt-1 flex items-center gap-1">
+                                <i class="fa-regular fa-clock"></i> <span>Kontrol aktif</span>
+                            </p>
+                        </div>
+
+                        <!-- Animasyonlu Su Tankı -->
+                        <div class="water-tank w-16 h-20 rounded-2xl border-2 border-sky-200 flex items-center justify-center flex-shrink-0 shadow-inner">
+                            <div id="water-tank-fill" class="water-fill" style="height: 5%">
+                                <div class="water-wave"></div>
+                            </div>
+                            <span id="water-pct-text" class="relative z-10 text-xs font-extrabold text-slate-800 drop-shadow-xs">%0</span>
+                        </div>
+                    </div>
+
+                    <!-- Su Ekleme Butonları (44px+ dokunmatik) -->
+                    <div class="grid grid-cols-3 gap-2 mt-4">
+                        <button onclick="addWaterAmount(250)" class="touch-target py-2.5 px-2 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-700 font-bold text-xs transition border border-sky-200/70">
+                            +250 ml
+                        </button>
+                        <button onclick="addWaterAmount(500)" class="touch-target py-2.5 px-2 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs transition shadow-xs">
+                            +500 ml
+                        </button>
+                        <button onclick="addWaterAmount(1000)" class="touch-target py-2.5 px-2 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-700 font-bold text-xs transition border border-sky-200/70">
+                            +1 Litre
+                        </button>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- BÖLÜM 3: ARDA AI DİYETİSYEN ASİSTANI -->
+            <section id="sec-meals" class="glass-card rounded-3xl p-4 sm:p-6 border border-emerald-100">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-3.5">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-2xl emerald-sky-gradient text-white flex items-center justify-center shadow-sm flex-shrink-0">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-sm sm:text-base font-extrabold text-slate-800">Arda AI Diyetisyen</h2>
+                            <p class="text-xs text-slate-500">Yediğini yaz; kalorisini ve makrolarını hesaplayıp ekleyeyim</p>
+                        </div>
+                    </div>
+                    <button onclick="askAIAdvice()" id="btn-ai-advice" class="touch-target w-full sm:w-auto px-4 py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-bold transition flex items-center justify-center gap-1.5 border border-emerald-200/60">
+                        <i class="fa-solid fa-lightbulb text-amber-500"></i> Ne Yemeliyim?
+                    </button>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-2.5">
+                    <input type="text" id="meal-ai-input" placeholder="Örn: Sabah 2 haşlanmış yumurta, 1 dilim tam buğday ekmeği..."
+                        onkeypress="if(event.key==='Enter') submitAIMeal()"
+                        class="touch-target flex-1 px-4 py-3 rounded-2xl bg-white border border-slate-200 text-base sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition">
+                    <button onclick="submitAIMeal()" id="btn-meal-submit" class="touch-target px-6 py-3 rounded-2xl emerald-sky-gradient hover:opacity-95 text-white font-bold text-sm shadow-md shadow-emerald-200 transition flex items-center justify-center gap-2 whitespace-nowrap">
+                        <i class="fa-solid fa-plus"></i> Hesapla & Ekle
+                    </button>
+                </div>
+
+                <!-- Hızlı 0 Kalori Bitki Çayı / Kahve Çubuğu -->
+                <div class="flex flex-wrap items-center gap-2 mt-3.5 pt-3 border-t border-slate-100">
+                    <span class="text-[11px] font-bold text-slate-400 w-full sm:w-auto"><i class="fa-solid fa-mug-hot text-amber-500 mr-1"></i>0 Kalori İçecek Ekle:</span>
+                    <button onclick="addZeroCalDrink('Portakal Çiçekli Beyaz Çay')" class="touch-target text-xs font-semibold px-3.5 py-2 rounded-full bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200/60 transition">
+                        + Beyaz Çay (<span id="drink-white-tea">0</span>)
+                    </button>
+                    <button onclick="addZeroCalDrink('Yeşil Çay')" class="touch-target text-xs font-semibold px-3.5 py-2 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200/60 transition">
+                        + Yeşil Çay (<span id="drink-green-tea">0</span>)
+                    </button>
+                    <button onclick="addZeroCalDrink('Şekersiz Sade Kahve')" class="touch-target text-xs font-semibold px-3.5 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+                        + Sade Kahve (<span id="drink-coffee">0</span>)
+                    </button>
+                </div>
+
+                <!-- AI Yükleniyor -->
+                <div id="ai-loading-box" class="hidden mt-3.5 p-3.5 rounded-2xl bg-sky-50/80 border border-sky-100 flex items-center gap-3 text-xs font-semibold text-sky-800">
+                    <div class="flex gap-1">
+                        <span class="w-2 h-2 rounded-full bg-sky-600 pulse-dot"></span>
+                        <span class="w-2 h-2 rounded-full bg-sky-600 pulse-dot"></span>
+                        <span class="w-2 h-2 rounded-full bg-sky-600 pulse-dot"></span>
+                    </div>
+                    <span>Besin değerleri analiz ediliyor...</span>
+                </div>
+
+                <!-- AI Yorum Kartı -->
+                <div id="ai-response-box" class="hidden mt-3.5 p-4 rounded-2xl bg-gradient-to-r from-emerald-50 to-sky-50 border border-emerald-200/70 text-xs sm:text-sm text-slate-700 leading-relaxed"></div>
+            </section>
+
+            <!-- BÖLÜM 4: ALT 3'LÜ MODÜL (ÖĞÜNLER • OTOMATİK TARTI GÜNLERİ • E-POSTA BİLDİRİM MERKEZİ) -->
+            <section class="desktop-grid-12 grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6">
+
+                <!-- 1. Bugünün Öğün Listesi (5 Sütun) -->
+                <div class="desktop-col-span lg:col-span-5 glass-card rounded-3xl p-4 sm:p-6 flex flex-col">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-sm font-extrabold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-plate-wheat text-emerald-600"></i> Bugünün Öğünleri
+                        </h3>
+                        <span id="today-meal-count" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">0 öğün</span>
+                    </div>
+                    <div id="meal-list-container" class="space-y-2.5 flex-1">
+                        <!-- Dinamik dolacak -->
+                    </div>
+                </div>
+
+                <!-- 2. Sistem Tarafından Belirlenen Otomatik Tartı Takvimi (4 Sütun) -->
+                <div id="sec-weigh" class="desktop-col-span lg:col-span-4 glass-card rounded-3xl p-4 sm:p-6 flex flex-col justify-between border border-orange-100">
+                    <div>
+                        <div class="flex items-center justify-between mb-3 gap-2">
+                            <h3 class="text-sm font-extrabold text-slate-800 flex items-center gap-2">
+                                <i class="fa-solid fa-calendar-days text-orange-500"></i> Otomatik Tartı Günlerin
+                            </h3>
+                            <span id="next-weigh-countdown" class="text-[11px] font-extrabold px-2.5 py-1 rounded-full bg-orange-100 text-orange-700">--</span>
+                        </div>
+
+                        <p class="text-[11px] text-slate-500 mb-3">
+                            Başlangıç tarihine (<strong id="weigh-start-ref">--</strong>) göre sistemin senin için belirlediği haftalık resmi tartı takvimi:
+                        </p>
+
+                        <!-- Otomatik Tartı Zaman Çizelgesi -->
+                        <div id="weigh-schedule-list" class="space-y-2 mb-4 max-h-48 overflow-y-auto pr-1">
+                            <!-- Dinamik dolacak -->
+                        </div>
+                    </div>
+
+                    <!-- Yeni Kilo Girişi -->
+                    <div class="pt-3 border-t border-slate-100">
+                        <label class="block text-[11px] font-bold text-slate-600 mb-1.5">Sabah Aç Karnına Tartı Kaydı Gir (kg):</label>
+                        <div class="flex gap-2">
+                            <input type="number" step="0.01" id="new-weight-input" placeholder="Örn: 87.40"
+                                class="touch-target flex-1 px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-base sm:text-sm font-semibold focus:outline-none focus:border-orange-500">
+                            <button onclick="recordWeightEntry()" class="touch-target px-4 py-2.5 rounded-xl coral-gradient text-white text-xs font-bold shadow-xs hover:opacity-95 transition">
+                                Kaydet
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Su Hatırlatma E-Posta Otomasyon Logları (3 Sütun) -->
+                <div class="desktop-col-span lg:col-span-3 glass-card rounded-3xl p-4 sm:p-6 flex flex-col justify-between border border-sky-100">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="text-sm font-extrabold text-slate-800 flex items-center gap-2">
+                                <i class="fa-solid fa-envelope-circle-check text-sky-600"></i> Mail Bildirimleri
+                            </h3>
+                        </div>
+
+                        <div class="p-3 rounded-2xl bg-sky-50/80 border border-sky-100 text-[11px] text-sky-900 space-y-1 mb-3">
+                            <p class="font-bold flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                                Otomatik Kural Aktif
+                            </p>
+                            <p class="text-sky-700 leading-relaxed">
+                                <strong id="rule-interval-label">2 saat</strong> boyunca su girişi olmazsa <strong id="rule-email-target" class="underline break-all">mailinize</strong> hatırlatma oluşturulur.
+                            </p>
+                        </div>
+
+                        <div id="email-logs-list" class="space-y-2 max-h-40 overflow-y-auto pr-1">
+                            <!-- Gönderilen mailler buraya düşer -->
+                        </div>
+                    </div>
+
+                    <button onclick="triggerWaterReminderEmail(true)" class="touch-target mt-4 w-full py-2.5 px-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs">
+                        <i class="fa-solid fa-paper-plane"></i> Mail Hatırlatması Oluştur
+                    </button>
+                </div>
+
+            </section>
+
+        </main>
+
+        <!-- MOBİL ALT GEZİNTİ ÇUBUĞU (MOBİL EKRANLARDA VE MOBİL ÖNİZLEME MODUNDA AKTİF) -->
+        <nav id="mobile-bottom-nav" class="hidden fixed bottom-0 left-0 right-0 z-40 glass-card border-t border-slate-200/80 px-2 py-1.5 justify-around items-center shadow-2xl">
+            <button type="button" onclick="scrollToSection('sec-summary')" class="touch-target flex-1 flex flex-col items-center justify-center text-emerald-700 font-bold text-[10px] gap-0.5">
+                <i class="fa-solid fa-chart-pie text-base"></i>
+                <span>Özet</span>
+            </button>
+            <button type="button" onclick="focusMealInput()" class="touch-target flex-1 flex flex-col items-center justify-center text-slate-600 hover:text-emerald-700 font-bold text-[10px] gap-0.5">
+                <i class="fa-solid fa-utensils text-base"></i>
+                <span>Öğün Ekle</span>
+            </button>
+            <button type="button" onclick="scrollToSection('sec-water')" class="touch-target flex-1 flex flex-col items-center justify-center text-slate-600 hover:text-sky-600 font-bold text-[10px] gap-0.5">
+                <i class="fa-solid fa-droplet text-base"></i>
+                <span>Su & Çay</span>
+            </button>
+            <button type="button" onclick="scrollToSection('sec-weigh')" class="touch-target flex-1 flex flex-col items-center justify-center text-slate-600 hover:text-orange-600 font-bold text-[10px] gap-0.5">
+                <i class="fa-solid fa-weight-scale text-base"></i>
+                <span>Tartı</span>
+            </button>
+        </nav>
+
+    </div>
+    </div> <!-- /#app-shell -->
+
+    <!-- JavaScript & Hibrit Veri Katmanı -->
+    <script type="module">
+// ... existing code ... -->
+        // Yerel Çok Kullanıcılı Veritabanı Anahtarları (Tamamen Temiz Yeni Sürüm)
+        const USERS_REGISTRY_KEY = 'arda_fit_users_v3';
+        const CURRENT_SESSION_KEY = 'arda_fit_active_user_v3';
+        const VIEWPORT_MODE_KEY = 'arda_fit_viewport_mode_v1';
+
+        let currentUser = null; // { uid, email, name }
+// ... existing code ... -->
+        window.focusMealInput = function() {
+            const inp = document.getElementById('meal-ai-input');
+            inp.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            inp.focus();
+        };
+
+        window.scrollToSection = function(sectionId) {
+            const el = document.getElementById(sectionId);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        };
+
+        // --- MASAÜSTÜ / MOBİL GÖRÜNÜM SEÇİCİ ---
+        window.setViewportMode = function(mode, silent = false) {
+            const body = document.body;
+            const btnDesktop = document.getElementById('view-btn-desktop');
+            const btnMobile = document.getElementById('view-btn-mobile');
+
+            if (mode === 'mobile') {
+                body.classList.add('mobile-preview-mode');
+                if (btnMobile && btnDesktop) {
+                    btnMobile.className = 'px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold bg-white text-emerald-700 shadow-2xs transition flex items-center gap-1';
+                    btnDesktop.className = 'px-2.5 py-1.5 rounded-lg text-[11px] font-bold text-slate-500 hover:text-slate-800 transition flex items-center gap-1';
+                }
+                if (!silent) showToast('Mobil görünüm moduna geçildi 📱', 'info');
+            } else {
+                body.classList.remove('mobile-preview-mode');
+                if (btnMobile && btnDesktop) {
+                    btnDesktop.className = 'px-2.5 py-1.5 rounded-lg text-[11px] font-extrabold bg-white text-emerald-700 shadow-2xs transition flex items-center gap-1';
+                    btnMobile.className = 'px-2.5 py-1.5 rounded-lg text-[11px] font-bold text-slate-500 hover:text-slate-800 transition flex items-center gap-1';
+                }
+                if (!silent) showToast('Masaüstü tam ekran görünümüne geçildi 🖥️', 'info');
+            }
+            localStorage.setItem(VIEWPORT_MODE_KEY, mode);
+        };
+
+        // --- 5. OTOMATİK HAFTALIK TARTI GÜNLERİ PLANLAYICISI ---
+// ... existing code ... -->
+        // --- SAYFA YÜKLENİNCE OTURUM VE GÖRÜNÜM KONTROLÜ ---
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedViewMode = localStorage.getItem(VIEWPORT_MODE_KEY);
+            if (savedViewMode === 'mobile' && window.innerWidth >= 768) {
+                setViewportMode('mobile', true);
+            } else {
+                setViewportMode('desktop', true);
+            }
+
+            setTimeout(() => {
+                const savedSession = localStorage.getItem(CURRENT_SESSION_KEY);
+                if (savedSession) {
+                    try {
+                        routeAuthenticatedUser(JSON.parse(savedSession));
+                        return;
+                    } catch {}
+                }
+                document.getElementById('global-loader').classList.add('hidden');
+                document.getElementById('auth-view').classList.remove('hidden');
+            }, 350);
+        });
+    </script>
+</body>
+</html>
